@@ -1,0 +1,4 @@
+All graphics are CC0 Creative Commons licensed, no attribution required.
+
+Steering Wheel sprite: https://pixabay.com/en/car-driving-wheel-steering-wheel-160115/
+Other sprites: http://opengameart.org/content/onscreen-controls-8-styles
