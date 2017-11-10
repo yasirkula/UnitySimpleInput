@@ -39,10 +39,8 @@ namespace SimpleInputNamespace
 
 		void OnUpdate()
 		{
-			if( Input.GetKey( key ) )
-				input.value = value;
-			else
-				input.value = 0f;
+			if( input != null )
+				input.value = Input.GetKey( key ) ? value : 0f;
 		}
 	}
 }

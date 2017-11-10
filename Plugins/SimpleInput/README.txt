@@ -1,4 +1,4 @@
-SimpleInput available at: https://github.com/yasirkula/SimpleInput
+SimpleInput available at: https://github.com/yasirkula/UnitySimpleInput
 
 = About SimpleInput =
 

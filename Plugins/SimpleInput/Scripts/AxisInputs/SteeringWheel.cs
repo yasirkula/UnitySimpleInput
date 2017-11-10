@@ -75,7 +75,8 @@ namespace SimpleInputNamespace
 			// Rotate the wheel image
 			wheelTR.localEulerAngles = new Vector3( 0f, 0f, -wheelAngle );
 
-			input.value = Value;
+			if( input != null )
+				input.value = Value;
 		}
 
 		public void OnPointerDown( PointerEventData eventData )

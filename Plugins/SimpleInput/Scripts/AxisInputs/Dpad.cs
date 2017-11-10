@@ -69,8 +69,11 @@ namespace SimpleInputNamespace
 		{
 			m_value = Vector2.zero;
 
-			xInput.value = 0f;
-			yInput.value = 0f;
+			if( xInput != null )
+				xInput.value = 0f;
+
+			if( yInput != null )
+				yInput.value = 0f;
 		}
 
 		private void CalculateInput( PointerEventData eventData )
@@ -99,8 +102,11 @@ namespace SimpleInputNamespace
 			else
 				m_value.x = 0f;
 
-			xInput.value = m_value.x;
-			yInput.value = m_value.y;
+			if( xInput != null )
+				xInput.value = m_value.x;
+
+			if( yInput != null )
+				yInput.value = m_value.y;
 		}
 	}
 }

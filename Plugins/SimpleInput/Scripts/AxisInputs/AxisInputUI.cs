@@ -38,12 +38,14 @@ namespace SimpleInputNamespace
 
 		public void OnPointerDown( PointerEventData eventData )
 		{
-			input.value = value;
+			if( input != null )
+				input.value = value;
 		}
 
 		public void OnPointerUp( PointerEventData eventData )
 		{
-			input.value = 0f;
+			if( input != null )
+				input.value = 0f;
 		}
 	}
 }

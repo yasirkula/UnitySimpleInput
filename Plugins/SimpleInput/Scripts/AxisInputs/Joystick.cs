@@ -161,8 +161,12 @@ namespace SimpleInputNamespace
 			m_value = direction * _1OverMovementAreaRadius;
 
 			thumbTR.localPosition = direction;
-			xInput.value = m_value.x;
-			yInput.value = m_value.y;
+
+			if( xInput != null )
+				xInput.value = m_value.x;
+
+			if( yInput != null )
+				yInput.value = m_value.y;
 		}
 
 		public void OnPointerUp( PointerEventData eventData )
@@ -172,8 +176,11 @@ namespace SimpleInputNamespace
 
 			m_value = Vector2.zero;
 
-			xInput.value = 0f;
-			yInput.value = 0f;
+			if( xInput != null )
+				xInput.value = 0f;
+
+			if( yInput != null )
+				yInput.value = 0f;
 		}
 
 		void OnUpdate()

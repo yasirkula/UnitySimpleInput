@@ -36,7 +36,8 @@ namespace SimpleInputNamespace
 
 		void OnUpdate()
 		{
-			input.isDown = Input.GetKey( key );
+			if( input != null )
+				input.isDown = Input.GetKey( key );
 		}
 	}
 }

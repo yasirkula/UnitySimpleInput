@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace SimpleInputNamespace
 {
 	public class Touchpad : MonoBehaviour
 	{
+		public enum MouseButton { Left = 0, Right = 1, Middle = 2 }
+
 		[SerializeField]
 		private string xAxis = "Mouse X";
 		[SerializeField]
@@ -17,9 +20,12 @@ namespace SimpleInputNamespace
 
 		public float sensitivity = 1f;
 
-		[Tooltip( "Should touchpad allow mouse inputs as well, or only touch inputs" )]
-		public bool allowMouseInput = false;
-		
+		[Tooltip( "Should touchpad allow touch inputs on touchscreens, or mouse input only" )]
+		public bool allowTouchInput = true;
+
+		[Tooltip( "Valid mouse buttons that can register input through this touchpad" )]
+		public MouseButton[] allowedMouseButtons;
+
 		[Tooltip( "Should a touch on a UI element be considered valid" )]
 		public bool ignoreUIElements = false;
 
@@ -42,6 +48,10 @@ namespace SimpleInputNamespace
 
 			rectTransform = transform as RectTransform;
 			resolutionMultiplier = 100f / ( Screen.width + Screen.height );
+
+			Graphic graphic = GetComponent<Graphic>();
+			if( graphic != null )
+				graphic.raycastTarget = false;
 		}
 
 		void OnEnable()
@@ -72,36 +82,14 @@ namespace SimpleInputNamespace
 
 			m_value.Set( 0f, 0f );
 
-			if( allowMouseInput && Input.touchCount == 0 )
+			if( allowTouchInput && Input.touchCount > 0 )
 			{
-				if( Input.GetMouseButtonDown( 0 ) )
-				{
-					Vector2 mousePos = Input.mousePosition;
-
-					if( ( rectTransform == null || RectTransformUtility.RectangleContainsScreenPoint( rectTransform, mousePos ) ) &&
-						( ignoreUIElements || eventSystem == null || !eventSystem.IsPointerOverGameObject() ) )
-					{
-						trackMouseInput = true;
-						prevMouseInputPos = Input.mousePosition;
-					}
-					else
-						trackMouseInput = false;
-				}
-				else if( trackMouseInput && Input.GetMouseButton( 0 ) )
-				{
-					Vector2 mousePos = Input.mousePosition;
-					m_value = ( mousePos - prevMouseInputPos ) * resolutionMultiplier * sensitivity;
-					prevMouseInputPos = mousePos;
-				}
-			}
-			else
-			{ 
 				for( int i = 0; i < Input.touchCount; i++ )
 				{
 					Touch touch = Input.GetTouch( i );
 					if( fingerId == -1 )
 					{
-						if( touch.phase == TouchPhase.Began && 
+						if( touch.phase == TouchPhase.Began &&
 							( rectTransform == null || RectTransformUtility.RectangleContainsScreenPoint( rectTransform, touch.position ) ) &&
 							( ignoreUIElements || eventSystem == null || !eventSystem.IsPointerOverGameObject( touch.fingerId ) ) )
 						{
@@ -120,9 +108,56 @@ namespace SimpleInputNamespace
 					}
 				}
 			}
+			else
+			{
+				if( GetMouseButtonDown() )
+				{
+					Vector2 mousePos = Input.mousePosition;
 
-			xInput.value = m_value.x;
-			yInput.value = m_value.y;
+					if( ( rectTransform == null || RectTransformUtility.RectangleContainsScreenPoint( rectTransform, mousePos ) ) &&
+						( ignoreUIElements || eventSystem == null || !eventSystem.IsPointerOverGameObject() ) )
+					{
+						trackMouseInput = true;
+						prevMouseInputPos = Input.mousePosition;
+					}
+					else
+						trackMouseInput = false;
+				}
+				else if( trackMouseInput && GetMouseButton() )
+				{
+					Vector2 mousePos = Input.mousePosition;
+					m_value = ( mousePos - prevMouseInputPos ) * resolutionMultiplier * sensitivity;
+					prevMouseInputPos = mousePos;
+				}
+			}
+
+			if( xInput != null )
+				xInput.value = m_value.x;
+
+			if( yInput != null )
+				yInput.value = m_value.y;
+		}
+
+		private bool GetMouseButtonDown()
+		{
+			for( int i = 0; i < allowedMouseButtons.Length; i++ )
+			{
+				if( Input.GetMouseButtonDown( (int) allowedMouseButtons[i] ) )
+					return true;
+			}
+
+			return false;
+		}
+
+		private bool GetMouseButton()
+		{
+			for( int i = 0; i < allowedMouseButtons.Length; i++ )
+			{
+				if( Input.GetMouseButtonDown( (int) allowedMouseButtons[i] ) )
+					return true;
+			}
+
+			return false;
 		}
 	}
 }
