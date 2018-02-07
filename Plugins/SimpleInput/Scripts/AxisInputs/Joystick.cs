@@ -65,6 +65,8 @@ namespace SimpleInputNamespace
 			if( isDynamicJoystick )
 			{
 				opacity = 0f;
+				thumb.raycastTarget = false;
+
 				OnUpdate();
 			}
 			else
