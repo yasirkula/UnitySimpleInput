@@ -1,18 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using SimpleInputNamespace;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SimpleInput : MonoBehaviour
 {
+	private enum InputState { None, Pressed, Held, Released };
+
 	#region Helper Classes
 	private class Axis
 	{
 		public readonly string name;
+		public readonly List<AxisInput> inputs;
 
 		public float value = 0f;
 		public float valueRaw = 0f;
-
-		public readonly List<AxisInput> inputs;
 
 		public Axis( string axis )
 		{
@@ -23,13 +25,10 @@ public class SimpleInput : MonoBehaviour
 
 	private class Button
 	{
-		public enum State { None, Pressed, Held, Released };
-
 		public readonly string button;
-
-		public State state = State.None;
-
 		public readonly List<ButtonInput> inputs;
+
+		public InputState state = InputState.None;
 
 		public Button( string button )
 		{
@@ -40,13 +39,10 @@ public class SimpleInput : MonoBehaviour
 
 	private class MouseButton
 	{
-		public enum State { None, Pressed, Held, Released };
-
 		public readonly int button;
-
-		public State state = State.None;
-
 		public readonly List<MouseButtonInput> inputs;
+
+		public InputState state = InputState.None;
 
 		public MouseButton( int button )
 		{
@@ -57,13 +53,10 @@ public class SimpleInput : MonoBehaviour
 
 	private class Key
 	{
-		public enum State { None, Pressed, Held, Released };
-
 		public readonly KeyCode key;
-
-		public State state = State.None;
-
 		public readonly List<KeyInput> inputs;
+
+		public InputState state = InputState.None;
 
 		public Key( KeyCode key )
 		{
@@ -72,66 +65,52 @@ public class SimpleInput : MonoBehaviour
 		}
 	}
 
-	public class AxisInput
+	[System.Serializable]
+	public class AxisInput : BaseInput<string, float>
 	{
-		public readonly string axis;
-		public float value = 0f;
+		public AxisInput() : base() { }
+		public AxisInput( string key ) : base( key ) { }
 
-		public AxisInput( string axis )
-		{
-			if( axis == null || axis.Length == 0 )
-				throw new System.ArgumentException();
+		public override bool IsKeyValid() { return !string.IsNullOrEmpty( Key ); }
 
-			this.axis = axis;
-		}
-
-		public void StartTracking() { RegisterAxis( this ); }
-		public void StopTracking() { UnregisterAxis( this ); }
+		protected override bool KeysEqual( string key1, string key2 ) { return key1 == key2; }
+		protected override void RegisterInput() { RegisterAxis( this ); }
+		protected override void UnregisterInput() { UnregisterAxis( this ); }
 	}
 
-	public class ButtonInput
+	[System.Serializable]
+	public class ButtonInput : BaseInput<string, bool>
 	{
-		public readonly string button;
-		public bool isDown = false;
+		public ButtonInput() : base() { }
+		public ButtonInput( string key ) : base( key ) { }
 
-		public ButtonInput( string button )
-		{
-			if( button == null || button.Length == 0 )
-				throw new System.ArgumentException();
+		public override bool IsKeyValid() { return !string.IsNullOrEmpty( Key ); }
 
-			this.button = button;
-		}
-
-		public void StartTracking() { RegisterButton( button, this ); }
-		public void StopTracking() { UnregisterButton( button, this ); }
+		protected override bool KeysEqual( string key1, string key2 ) { return key1 == key2; }
+		protected override void RegisterInput() { RegisterButton( this ); }
+		protected override void UnregisterInput() { UnregisterButton( this ); }
 	}
 
-	public class MouseButtonInput
+	[System.Serializable]
+	public class MouseButtonInput : BaseInput<int, bool>
 	{
-		public readonly int button;
-		public bool isDown = false;
+		public MouseButtonInput() : base() { }
+		public MouseButtonInput( int key ) : base( key ) { }
 
-		public MouseButtonInput( int button )
-		{
-			this.button = button;
-		}
-
-		public void StartTracking() { RegisterMouseButton( button, this ); }
-		public void StopTracking() { UnregisterMouseButton( button, this ); }
+		protected override bool KeysEqual( int key1, int key2 ) { return key1 == key2; }
+		protected override void RegisterInput() { RegisterMouseButton( this ); }
+		protected override void UnregisterInput() { UnregisterMouseButton( this ); }
 	}
 
-	public class KeyInput
+	[System.Serializable]
+	public class KeyInput : BaseInput<KeyCode, bool>
 	{
-		public readonly KeyCode key;
-		public bool isDown = false;
+		public KeyInput() : base() { }
+		public KeyInput( KeyCode key ) : base( key ) { }
 
-		public KeyInput( KeyCode key )
-		{
-			this.key = key;
-		}
-
-		public void StartTracking() { RegisterKey( key, this ); }
-		public void StopTracking() { UnregisterKey( key, this ); }
+		protected override bool KeysEqual( KeyCode key1, KeyCode key2 ) { return key1 == key2; }
+		protected override void RegisterInput() { RegisterKey( this ); }
+		protected override void UnregisterInput() { UnregisterKey( this ); }
 	}
 	#endregion
 
@@ -231,7 +210,7 @@ public class SimpleInput : MonoBehaviour
 	{
 		Button buttonInput;
 		if( buttons.TryGetValue( button, out buttonInput ) )
-			return buttonInput.state == Button.State.Pressed;
+			return buttonInput.state == InputState.Pressed;
 
 		// Try to increase the hit-rate of the above if statement
 		// by tracking the corresponding Unity button (if exists)
@@ -244,7 +223,7 @@ public class SimpleInput : MonoBehaviour
 	{
 		Button buttonInput;
 		if( buttons.TryGetValue( button, out buttonInput ) )
-			return buttonInput.state == Button.State.Held || buttonInput.state == Button.State.Pressed;
+			return buttonInput.state == InputState.Held || buttonInput.state == InputState.Pressed;
 
 		TrackButton( button );
 		return false;
@@ -254,7 +233,7 @@ public class SimpleInput : MonoBehaviour
 	{
 		Button buttonInput;
 		if( buttons.TryGetValue( button, out buttonInput ) )
-			return buttonInput.state == Button.State.Released;
+			return buttonInput.state == InputState.Released;
 
 		TrackButton( button );
 		return false;
@@ -264,7 +243,7 @@ public class SimpleInput : MonoBehaviour
 	{
 		MouseButton mouseButtonInput;
 		if( mouseButtons.TryGetValue( button, out mouseButtonInput ) )
-			return mouseButtonInput.state == MouseButton.State.Pressed;
+			return mouseButtonInput.state == InputState.Pressed;
 
 		// Try to increase the hit-rate of the above if statement
 		// by tracking the corresponding Unity mouse button (if exists)
@@ -277,7 +256,7 @@ public class SimpleInput : MonoBehaviour
 	{
 		MouseButton mouseButtonInput;
 		if( mouseButtons.TryGetValue( button, out mouseButtonInput ) )
-			return mouseButtonInput.state == MouseButton.State.Held || mouseButtonInput.state == MouseButton.State.Pressed;
+			return mouseButtonInput.state == InputState.Held || mouseButtonInput.state == InputState.Pressed;
 
 		TrackMouseButton( button );
 		return false;
@@ -287,7 +266,7 @@ public class SimpleInput : MonoBehaviour
 	{
 		MouseButton mouseButtonInput;
 		if( mouseButtons.TryGetValue( button, out mouseButtonInput ) )
-			return mouseButtonInput.state == MouseButton.State.Released;
+			return mouseButtonInput.state == InputState.Released;
 
 		TrackMouseButton( button );
 		return false;
@@ -300,7 +279,7 @@ public class SimpleInput : MonoBehaviour
 
 		Key keyInput;
 		if( keys.TryGetValue( key, out keyInput ) )
-			return keyInput.state == Key.State.Pressed;
+			return keyInput.state == InputState.Pressed;
 
 		return false;
 	}
@@ -312,7 +291,7 @@ public class SimpleInput : MonoBehaviour
 
 		Key keyInput;
 		if( keys.TryGetValue( key, out keyInput ) )
-			return keyInput.state == Key.State.Held || keyInput.state == Key.State.Pressed;
+			return keyInput.state == InputState.Held || keyInput.state == InputState.Pressed;
 
 		return false;
 	}
@@ -324,7 +303,7 @@ public class SimpleInput : MonoBehaviour
 
 		Key keyInput;
 		if( keys.TryGetValue( key, out keyInput ) )
-			return keyInput.state == Key.State.Released;
+			return keyInput.state == InputState.Released;
 
 		return false;
 	}
@@ -332,15 +311,15 @@ public class SimpleInput : MonoBehaviour
 	private static void RegisterAxis( AxisInput input )
 	{
 		Axis axisObj;
-		if( !axes.TryGetValue( input.axis, out axisObj ) )
+		if( !axes.TryGetValue( input.Key, out axisObj ) )
 		{
-			axisObj = new Axis( input.axis );
+			axisObj = new Axis( input.Key );
 
-			axes[input.axis] = axisObj;
+			axes[input.Key] = axisObj;
 			axesList.Add( axisObj );
 
 			// Track corresponding Unity input as well, if exists
-			TrackAxis( input.axis, true );
+			TrackAxis( input.Key, true );
 		}
 
 		axisObj.inputs.Add( input );
@@ -349,98 +328,98 @@ public class SimpleInput : MonoBehaviour
 	private static void UnregisterAxis( AxisInput input )
 	{
 		Axis axisObj;
-		if( axes.TryGetValue( input.axis, out axisObj ) )
+		if( axes.TryGetValue( input.Key, out axisObj ) )
 		{
 			if( axisObj.inputs.Remove( input ) && axisObj.inputs.Count == 0 )
 			{
-				axes.Remove( input.axis );
+				axes.Remove( input.Key );
 				axesList.Remove( axisObj );
 			}
 		}
 	}
 
-	private static void RegisterButton( string button, ButtonInput input )
+	private static void RegisterButton( ButtonInput input )
 	{
 		Button buttonObj;
-		if( !buttons.TryGetValue( button, out buttonObj ) )
+		if( !buttons.TryGetValue( input.Key, out buttonObj ) )
 		{
-			buttonObj = new Button( button );
+			buttonObj = new Button( input.Key );
 
-			buttons[button] = buttonObj;
+			buttons[input.Key] = buttonObj;
 			buttonsList.Add( buttonObj );
 
 			// Track corresponding Unity input as well, if exists
-			TrackButton( input.button, true );
+			TrackButton( input.Key, true );
 		}
 
 		buttonObj.inputs.Add( input );
 	}
 
-	private static void UnregisterButton( string button, ButtonInput input )
+	private static void UnregisterButton( ButtonInput input )
 	{
 		Button buttonObj;
-		if( buttons.TryGetValue( button, out buttonObj ) )
+		if( buttons.TryGetValue( input.Key, out buttonObj ) )
 		{
 			if( buttonObj.inputs.Remove( input ) && buttonObj.inputs.Count == 0 )
 			{
-				buttons.Remove( button );
+				buttons.Remove( input.Key );
 				buttonsList.Remove( buttonObj );
 			}
 		}
 	}
 
-	private static void RegisterMouseButton( int button, MouseButtonInput input )
+	private static void RegisterMouseButton( MouseButtonInput input )
 	{
 		MouseButton mouseButtonObj;
-		if( !mouseButtons.TryGetValue( button, out mouseButtonObj ) )
+		if( !mouseButtons.TryGetValue( input.Key, out mouseButtonObj ) )
 		{
-			mouseButtonObj = new MouseButton( button );
+			mouseButtonObj = new MouseButton( input.Key );
 
-			mouseButtons[button] = mouseButtonObj;
+			mouseButtons[input.Key] = mouseButtonObj;
 			mouseButtonsList.Add( mouseButtonObj );
 
 			// Track corresponding Unity input as well, if exists
-			TrackMouseButton( input.button, true );
+			TrackMouseButton( input.Key, true );
 		}
 
 		mouseButtonObj.inputs.Add( input );
 	}
 
-	private static void UnregisterMouseButton( int button, MouseButtonInput input )
+	private static void UnregisterMouseButton( MouseButtonInput input )
 	{
 		MouseButton mouseButtonObj;
-		if( mouseButtons.TryGetValue( button, out mouseButtonObj ) )
+		if( mouseButtons.TryGetValue( input.Key, out mouseButtonObj ) )
 		{
 			if( mouseButtonObj.inputs.Remove( input ) && mouseButtonObj.inputs.Count == 0 )
 			{
-				mouseButtons.Remove( button );
+				mouseButtons.Remove( input.Key );
 				mouseButtonsList.Remove( mouseButtonObj );
 			}
 		}
 	}
 
-	private static void RegisterKey( KeyCode key, KeyInput input )
+	private static void RegisterKey( KeyInput input )
 	{
 		Key keyObj;
-		if( !keys.TryGetValue( key, out keyObj ) )
+		if( !keys.TryGetValue( input.Key, out keyObj ) )
 		{
-			keyObj = new Key( key );
+			keyObj = new Key( input.Key );
 
-			keys[key] = keyObj;
+			keys[input.Key] = keyObj;
 			keysList.Add( keyObj );
 		}
 
 		keyObj.inputs.Add( input );
 	}
 
-	private static void UnregisterKey( KeyCode key, KeyInput input )
+	private static void UnregisterKey( KeyInput input )
 	{
 		Key keyObj;
-		if( keys.TryGetValue( key, out keyObj ) )
+		if( keys.TryGetValue( input.Key, out keyObj ) )
 		{
 			if( keyObj.inputs.Remove( input ) && keyObj.inputs.Count == 0 )
 			{
-				keys.Remove( key );
+				keys.Remove( input.Key );
 				keysList.Remove( keyObj );
 			}
 		}
@@ -469,7 +448,7 @@ public class SimpleInput : MonoBehaviour
 	{
 		try
 		{
-			ButtonInput unityButton = new ButtonInput( button ) { isDown = Input.GetButton( button ) };
+			ButtonInput unityButton = new ButtonInput( button ) { value = Input.GetButton( button ) };
 			trackedUnityButtons.Add( unityButton );
 			unityButton.StartTracking();
 		}
@@ -477,7 +456,7 @@ public class SimpleInput : MonoBehaviour
 		{
 			if( !trackUnityButtonOnly )
 			{
-				ButtonInput temporaryButton = new ButtonInput( button ) { isDown = false };
+				ButtonInput temporaryButton = new ButtonInput( button ) { value = false };
 				trackedTemporaryButtons.Add( temporaryButton );
 				temporaryButton.StartTracking();
 			}
@@ -488,7 +467,7 @@ public class SimpleInput : MonoBehaviour
 	{
 		try
 		{
-			MouseButtonInput unityMouseButton = new MouseButtonInput( button ) { isDown = Input.GetMouseButton( button ) };
+			MouseButtonInput unityMouseButton = new MouseButtonInput( button ) { value = Input.GetMouseButton( button ) };
 			trackedUnityMouseButtons.Add( unityMouseButton );
 			unityMouseButton.StartTracking();
 		}
@@ -496,7 +475,7 @@ public class SimpleInput : MonoBehaviour
 		{
 			if( !trackUnityMouseButtonOnly )
 			{
-				MouseButtonInput temporaryMouseButton = new MouseButtonInput( button ) { isDown = false };
+				MouseButtonInput temporaryMouseButton = new MouseButtonInput( button ) { value = false };
 				trackedTemporaryMouseButtons.Add( temporaryMouseButton );
 				temporaryMouseButton.StartTracking();
 			}
@@ -509,13 +488,15 @@ public class SimpleInput : MonoBehaviour
 			OnUpdate();
 
 		for( int i = 0; i < trackedUnityAxes.Count; i++ )
-			trackedUnityAxes[i].value = Input.GetAxisRaw( trackedUnityAxes[i].axis );
+			trackedUnityAxes[i].value = Input.GetAxisRaw( trackedUnityAxes[i].Key );
 
 		for( int i = 0; i < trackedUnityButtons.Count; i++ )
-			trackedUnityButtons[i].isDown = Input.GetButton( trackedUnityButtons[i].button );
+			trackedUnityButtons[i].value = Input.GetButton( trackedUnityButtons[i].Key );
 
 		for( int i = 0; i < trackedUnityMouseButtons.Count; i++ )
-			trackedUnityMouseButtons[i].isDown = Input.GetMouseButton( trackedUnityMouseButtons[i].button );
+			trackedUnityMouseButtons[i].value = Input.GetMouseButton( trackedUnityMouseButtons[i].Key );
+
+		float lerpModifier = AXIS_LERP_MODIFIER * Time.deltaTime;
 
 		for( int i = 0; i < axesList.Count; i++ )
 		{
@@ -532,7 +513,7 @@ public class SimpleInput : MonoBehaviour
 				}
 			}
 
-			axis.value = Mathf.Lerp( axis.value, axis.valueRaw, AXIS_LERP_MODIFIER * Time.deltaTime );
+			axis.value = Mathf.Lerp( axis.value, axis.valueRaw, lerpModifier );
 
 			if( axis.valueRaw == 0f && axis.value != 0f )
 			{
@@ -549,7 +530,7 @@ public class SimpleInput : MonoBehaviour
 			for( int j = button.inputs.Count - 1; j >= 0; j-- )
 			{
 				ButtonInput input = button.inputs[j];
-				if( input.isDown )
+				if( input.value )
 				{
 					isDown = true;
 					break;
@@ -558,17 +539,17 @@ public class SimpleInput : MonoBehaviour
 
 			if( isDown )
 			{
-				if( button.state == Button.State.None || button.state == Button.State.Released )
-					button.state = Button.State.Pressed;
+				if( button.state == InputState.None || button.state == InputState.Released )
+					button.state = InputState.Pressed;
 				else
-					button.state = Button.State.Held;
+					button.state = InputState.Held;
 			}
 			else
 			{
-				if( button.state == Button.State.Pressed || button.state == Button.State.Held )
-					button.state = Button.State.Released;
+				if( button.state == InputState.Pressed || button.state == InputState.Held )
+					button.state = InputState.Released;
 				else
-					button.state = Button.State.None;
+					button.state = InputState.None;
 			}
 		}
 
@@ -580,7 +561,7 @@ public class SimpleInput : MonoBehaviour
 			for( int j = mouseButton.inputs.Count - 1; j >= 0; j-- )
 			{
 				MouseButtonInput input = mouseButton.inputs[j];
-				if( input.isDown )
+				if( input.value )
 				{
 					isDown = true;
 					break;
@@ -589,17 +570,17 @@ public class SimpleInput : MonoBehaviour
 
 			if( isDown )
 			{
-				if( mouseButton.state == MouseButton.State.None || mouseButton.state == MouseButton.State.Released )
-					mouseButton.state = MouseButton.State.Pressed;
+				if( mouseButton.state == InputState.None || mouseButton.state == InputState.Released )
+					mouseButton.state = InputState.Pressed;
 				else
-					mouseButton.state = MouseButton.State.Held;
+					mouseButton.state = InputState.Held;
 			}
 			else
 			{
-				if( mouseButton.state == MouseButton.State.Pressed || mouseButton.state == MouseButton.State.Held )
-					mouseButton.state = MouseButton.State.Released;
+				if( mouseButton.state == InputState.Pressed || mouseButton.state == InputState.Held )
+					mouseButton.state = InputState.Released;
 				else
-					mouseButton.state = MouseButton.State.None;
+					mouseButton.state = InputState.None;
 			}
 		}
 
@@ -611,7 +592,7 @@ public class SimpleInput : MonoBehaviour
 			for( int j = key.inputs.Count - 1; j >= 0; j-- )
 			{
 				KeyInput input = key.inputs[j];
-				if( input.isDown )
+				if( input.value )
 				{
 					isDown = true;
 					break;
@@ -620,17 +601,17 @@ public class SimpleInput : MonoBehaviour
 
 			if( isDown )
 			{
-				if( key.state == Key.State.None || key.state == Key.State.Released )
-					key.state = Key.State.Pressed;
+				if( key.state == InputState.None || key.state == InputState.Released )
+					key.state = InputState.Pressed;
 				else
-					key.state = Key.State.Held;
+					key.state = InputState.Held;
 			}
 			else
 			{
-				if( key.state == Key.State.Pressed || key.state == Key.State.Held )
-					key.state = Key.State.Released;
+				if( key.state == InputState.Pressed || key.state == InputState.Held )
+					key.state = InputState.Released;
 				else
-					key.state = Key.State.None;
+					key.state = InputState.None;
 			}
 		}
 	}

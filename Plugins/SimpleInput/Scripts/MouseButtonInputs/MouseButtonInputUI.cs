@@ -6,40 +6,33 @@ namespace SimpleInputNamespace
 {
 	public class MouseButtonInputUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	{
-		[SerializeField]
-		private int button;
-
-		private SimpleInput.MouseButtonInput input = null;
+		public SimpleInput.MouseButtonInput mouseButton = new SimpleInput.MouseButtonInput();
 
 		void Awake()
 		{
 			Graphic graphic = GetComponent<Graphic>();
 			if( graphic != null )
 				graphic.raycastTarget = true;
-
-			input = new SimpleInput.MouseButtonInput( button );
 		}
 
 		void OnEnable()
 		{
-			if( input != null )
-				input.StartTracking();
+			mouseButton.StartTracking();
 		}
 
 		void OnDisable()
 		{
-			if( input != null )
-				input.StopTracking();
+			mouseButton.StopTracking();
 		}
 
 		public void OnPointerDown( PointerEventData eventData )
 		{
-			input.isDown = true;
+			mouseButton.value = true;
 		}
 
 		public void OnPointerUp( PointerEventData eventData )
 		{
-			input.isDown = false;
+			mouseButton.value = false;
 		}
 	}
 }

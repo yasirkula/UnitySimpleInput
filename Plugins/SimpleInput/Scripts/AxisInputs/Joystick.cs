@@ -7,21 +7,16 @@ namespace SimpleInputNamespace
 	public class Joystick : MonoBehaviour, ISimpleInputDraggable
 	{
 		public enum MovementAxes { XandY, X, Y };
-
-		[SerializeField]
-		private string xAxis = "Horizontal";
-		[SerializeField]
-		private string yAxis = "Vertical";
-
-		private SimpleInput.AxisInput xInput = null;
-		private SimpleInput.AxisInput yInput = null;
+		
+		public SimpleInput.AxisInput xAxis = new SimpleInput.AxisInput( "Horizontal" );
+		public SimpleInput.AxisInput yAxis = new SimpleInput.AxisInput( "Vertical" );
 
 		private RectTransform joystickTR;
 		private Image background;
 
-		private RectTransform thumbTR;
 		[SerializeField]
 		private Image thumb;
+		private RectTransform thumbTR;
 
 		public MovementAxes movementAxes = MovementAxes.XandY;
 
@@ -46,12 +41,6 @@ namespace SimpleInputNamespace
 
 		void Awake()
 		{
-			if( xAxis != null && xAxis.Length > 0 )
-				xInput = new SimpleInput.AxisInput( xAxis );
-
-			if( yAxis != null && yAxis.Length > 0 )
-				yInput = new SimpleInput.AxisInput( yAxis );
-
 			joystickTR = (RectTransform) transform;
 			thumbTR = thumb.rectTransform;
 
@@ -113,22 +102,16 @@ namespace SimpleInputNamespace
 
 		void OnEnable()
 		{
-			if( xInput != null )
-				xInput.StartTracking();
-
-			if( yInput != null )
-				yInput.StartTracking();
+			xAxis.StartTracking();
+			yAxis.StartTracking();
 
 			SimpleInput.OnUpdate += OnUpdate;
 		}
 
 		void OnDisable()
 		{
-			if( xInput != null )
-				xInput.StopTracking();
-
-			if( yInput != null )
-				yInput.StopTracking();
+			xAxis.StopTracking();
+			yAxis.StopTracking();
 
 			SimpleInput.OnUpdate -= OnUpdate;
 		}
@@ -164,11 +147,8 @@ namespace SimpleInputNamespace
 
 			thumbTR.localPosition = direction;
 
-			if( xInput != null )
-				xInput.value = m_value.x;
-
-			if( yInput != null )
-				yInput.value = m_value.y;
+			xAxis.value = m_value.x;
+			yAxis.value = m_value.y;
 		}
 
 		public void OnPointerUp( PointerEventData eventData )
@@ -178,11 +158,8 @@ namespace SimpleInputNamespace
 
 			m_value = Vector2.zero;
 
-			if( xInput != null )
-				xInput.value = 0f;
-
-			if( yInput != null )
-				yInput.value = 0f;
+			xAxis.value = 0f;
+			yAxis.value = 0f;
 		}
 
 		void OnUpdate()

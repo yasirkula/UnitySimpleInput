@@ -7,14 +7,9 @@ namespace SimpleInputNamespace
 	public class Touchpad : MonoBehaviour
 	{
 		public enum MouseButton { Left = 0, Right = 1, Middle = 2 }
-
-		[SerializeField]
-		private string xAxis = "Mouse X";
-		[SerializeField]
-		private string yAxis = "Mouse Y";
-
-		private SimpleInput.AxisInput xInput = null;
-		private SimpleInput.AxisInput yInput = null;
+		
+		public SimpleInput.AxisInput xAxis = new SimpleInput.AxisInput( "Mouse X" );
+		public SimpleInput.AxisInput yAxis = new SimpleInput.AxisInput( "Mouse Y" );
 
 		private RectTransform rectTransform;
 
@@ -40,12 +35,6 @@ namespace SimpleInputNamespace
 
 		void Awake()
 		{
-			if( xAxis != null && xAxis.Length > 0 )
-				xInput = new SimpleInput.AxisInput( xAxis );
-
-			if( yAxis != null && yAxis.Length > 0 )
-				yInput = new SimpleInput.AxisInput( yAxis );
-
 			rectTransform = transform as RectTransform;
 			resolutionMultiplier = 100f / ( Screen.width + Screen.height );
 
@@ -56,22 +45,16 @@ namespace SimpleInputNamespace
 
 		void OnEnable()
 		{
-			if( xInput != null )
-				xInput.StartTracking();
-
-			if( yInput != null )
-				yInput.StartTracking();
+			xAxis.StartTracking();
+			yAxis.StartTracking();
 
 			SimpleInput.OnUpdate += OnUpdate;
 		}
 
 		void OnDisable()
 		{
-			if( xInput != null )
-				xInput.StopTracking();
-
-			if( yInput != null )
-				yInput.StopTracking();
+			xAxis.StopTracking();
+			yAxis.StopTracking();
 
 			SimpleInput.OnUpdate -= OnUpdate;
 		}
@@ -131,11 +114,8 @@ namespace SimpleInputNamespace
 				}
 			}
 
-			if( xInput != null )
-				xInput.value = m_value.x;
-
-			if( yInput != null )
-				yInput.value = m_value.y;
+			xAxis.value = m_value.x;
+			yAxis.value = m_value.y;
 		}
 
 		private bool GetMouseButtonDown()

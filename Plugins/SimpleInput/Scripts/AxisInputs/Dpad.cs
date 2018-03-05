@@ -6,13 +6,8 @@ namespace SimpleInputNamespace
 {
 	public class Dpad : MonoBehaviour, ISimpleInputDraggable
 	{
-		[SerializeField]
-		private string xAxis = "Horizontal";
-		[SerializeField]
-		private string yAxis = "Vertical";
-
-		private SimpleInput.AxisInput xInput = null;
-		private SimpleInput.AxisInput yInput = null;
+		public SimpleInput.AxisInput xAxis = new SimpleInput.AxisInput( "Horizontal" );
+		public SimpleInput.AxisInput yAxis = new SimpleInput.AxisInput( "Vertical" );
 
 		private RectTransform rectTransform;
 		private Graphic background;
@@ -22,12 +17,6 @@ namespace SimpleInputNamespace
 
 		void Awake()
 		{
-			if( xAxis != null && xAxis.Length > 0 )
-				xInput = new SimpleInput.AxisInput( xAxis );
-
-			if( yAxis != null && yAxis.Length > 0 )
-				yInput = new SimpleInput.AxisInput( yAxis );
-
 			rectTransform = (RectTransform) transform;
 			background = GetComponent<Graphic>();
 			if( background != null )
@@ -39,20 +28,14 @@ namespace SimpleInputNamespace
 
 		void OnEnable()
 		{
-			if( xInput != null )
-				xInput.StartTracking();
-
-			if( yInput != null )
-				yInput.StartTracking();
+			xAxis.StartTracking();
+			yAxis.StartTracking();
 		}
 
 		void OnDisable()
 		{
-			if( xInput != null )
-				xInput.StopTracking();
-
-			if( yInput != null )
-				yInput.StopTracking();
+			xAxis.StopTracking();
+			yAxis.StopTracking();
 		}
 
 		public void OnPointerDown( PointerEventData eventData )
@@ -69,11 +52,8 @@ namespace SimpleInputNamespace
 		{
 			m_value = Vector2.zero;
 
-			if( xInput != null )
-				xInput.value = 0f;
-
-			if( yInput != null )
-				yInput.value = 0f;
+			xAxis.value = 0f;
+			yAxis.value = 0f;
 		}
 
 		private void CalculateInput( PointerEventData eventData )
@@ -102,11 +82,8 @@ namespace SimpleInputNamespace
 			else
 				m_value.x = 0f;
 
-			if( xInput != null )
-				xInput.value = m_value.x;
-
-			if( yInput != null )
-				yInput.value = m_value.y;
+			xAxis.value = m_value.x;
+			yAxis.value = m_value.y;
 		}
 	}
 }

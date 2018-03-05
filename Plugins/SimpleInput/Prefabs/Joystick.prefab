@@ -57,8 +57,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d42b387efc83be49900b546e4052e28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xAxis: Horizontal
-  yAxis: Vertical
+  xAxis:
+    m_key: Horizontal
+    value: 0
+  yAxis:
+    m_key: Vertical
+    value: 0
   thumb: {fileID: 114592483299003616}
   movementAxes: 0
   movementAreaRadius: 75

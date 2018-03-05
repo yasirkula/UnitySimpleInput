@@ -6,10 +6,7 @@ namespace SimpleInputNamespace
 {
 	public class SteeringWheel : MonoBehaviour, ISimpleInputDraggable
 	{
-		[SerializeField]
-		private string axis = "Horizontal";
-
-		private SimpleInput.AxisInput input = null;
+		public SimpleInput.AxisInput axis = new SimpleInput.AxisInput( "Horizontal" );
 
 		private Graphic wheel;
 
@@ -29,9 +26,6 @@ namespace SimpleInputNamespace
 
 		void Awake()
 		{
-			if( axis != null && axis.Length > 0 )
-				input = new SimpleInput.AxisInput( axis );
-
 			wheel = GetComponent<Graphic>();
 			wheelTR = wheel.rectTransform;
 
@@ -43,17 +37,13 @@ namespace SimpleInputNamespace
 
 		void OnEnable()
 		{
-			if( input != null )
-				input.StartTracking();
-
+			axis.StartTracking();
 			SimpleInput.OnUpdate += OnUpdate;
 		}
 
 		void OnDisable()
 		{
-			if( input != null )
-				input.StopTracking();
-
+			axis.StopTracking();
 			SimpleInput.OnUpdate -= OnUpdate;
 		}
 
@@ -75,8 +65,7 @@ namespace SimpleInputNamespace
 			// Rotate the wheel image
 			wheelTR.localEulerAngles = new Vector3( 0f, 0f, -wheelAngle );
 
-			if( input != null )
-				input.value = Value;
+			axis.value = Value;
 		}
 
 		public void OnPointerDown( PointerEventData eventData )

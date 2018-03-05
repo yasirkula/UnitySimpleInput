@@ -5,42 +5,28 @@ namespace SimpleInputNamespace
 	public class AxisInputKeyboard : MonoBehaviour
 	{
 		[SerializeField]
-		private string axis;
-
-		[SerializeField]
 		private KeyCode key;
 
 		[SerializeField]
 		private float value;
-
-		private SimpleInput.AxisInput input = null;
-
-		void Awake()
-		{
-			if( axis != null && axis.Length > 0 )
-				input = new SimpleInput.AxisInput( axis );
-		}
+		
+		public SimpleInput.AxisInput axis = new SimpleInput.AxisInput();
 
 		void OnEnable()
 		{
-			if( input != null )
-				input.StartTracking();
-
+			axis.StartTracking();
 			SimpleInput.OnUpdate += OnUpdate;
 		}
 
 		void OnDisable()
 		{
-			if( input != null )
-				input.StopTracking();
-
+			axis.StopTracking();
 			SimpleInput.OnUpdate -= OnUpdate;
 		}
 
 		void OnUpdate()
 		{
-			if( input != null )
-				input.value = Input.GetKey( key ) ? value : 0f;
+			axis.value = Input.GetKey( key ) ? value : 0f;
 		}
 	}
 }

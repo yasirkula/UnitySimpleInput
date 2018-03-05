@@ -5,37 +5,25 @@ namespace SimpleInputNamespace
 	public class KeyInputKeyboard : MonoBehaviour
 	{
 		[SerializeField]
-		private KeyCode simulatedKey;
+		private KeyCode realKey;
 
-		[SerializeField]
-		private KeyCode key;
-
-		private SimpleInput.KeyInput input = null;
-
-		void Awake()
-		{
-			input = new SimpleInput.KeyInput( simulatedKey );
-		}
-
+		public SimpleInput.KeyInput key = new SimpleInput.KeyInput();
+		
 		void OnEnable()
 		{
-			if( input != null )
-				input.StartTracking();
-
+			key.StartTracking();
 			SimpleInput.OnUpdate += OnUpdate;
 		}
 
 		void OnDisable()
 		{
-			if( input != null )
-				input.StopTracking();
-
+			key.StopTracking();
 			SimpleInput.OnUpdate -= OnUpdate;
 		}
 
 		void OnUpdate()
 		{
-			input.isDown = Input.GetKey( key );
+			key.value = Input.GetKey( realKey );
 		}
 	}
 }

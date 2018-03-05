@@ -5,39 +5,25 @@ namespace SimpleInputNamespace
 	public class ButtonInputKeyboard : MonoBehaviour
 	{
 		[SerializeField]
-		private string button;
-
-		[SerializeField]
 		private KeyCode key;
 
-		private SimpleInput.ButtonInput input = null;
-
-		void Awake()
-		{
-			if( button != null && button.Length > 0 )
-				input = new SimpleInput.ButtonInput( button );
-		}
-
+		public SimpleInput.ButtonInput button = new SimpleInput.ButtonInput();
+		
 		void OnEnable()
 		{
-			if( input != null )
-				input.StartTracking();
-
+			button.StartTracking();
 			SimpleInput.OnUpdate += OnUpdate;
 		}
 
 		void OnDisable()
 		{
-			if( input != null )
-				input.StopTracking();
-
+			button.StopTracking();
 			SimpleInput.OnUpdate -= OnUpdate;
 		}
 
 		void OnUpdate()
 		{
-			if( input != null )
-				input.isDown = Input.GetKey( key );
+			button.value = Input.GetKey( key );
 		}
 	}
 }

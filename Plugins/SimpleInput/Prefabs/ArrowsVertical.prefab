@@ -101,8 +101,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fda952153dba3064ab80a62889c1583f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axis: Vertical
   value: -1
+  axis:
+    m_key: Vertical
+    value: 0
 --- !u!114 &114670592129933270
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -141,8 +143,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fda952153dba3064ab80a62889c1583f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axis: Vertical
   value: 1
+  axis:
+    m_key: Vertical
+    value: 0
 --- !u!114 &114965483807734494
 MonoBehaviour:
   m_ObjectHideFlags: 1
