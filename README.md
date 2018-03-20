@@ -1,6 +1,10 @@
 # Simple Input for Unity 3D
 ![screenshot](screenshot.png)
 
+**Available on Asset Store:** https://www.assetstore.unity3d.com/en/#!/content/113033
+
+**Forum Thread:** https://forum.unity.com/threads/simple-input-use-custom-input-providers-like-joysticks-ui-buttons-and-d-pads-open-source.520504/
+
 ## ABOUT
 SimpleInput is a replacement for Unity's standard **Input** system that allows you to use your own input providers for axes, buttons, mouse buttons and keys. In other words, it lets you simulate e.g. Input.GetAxis when a button is pressed or a joystick is dragged. It also supports using custom axes and buttons that don't necessarily exist in Edit-Project Settings-Input.
 
