@@ -1,10 +1,13 @@
 ﻿using UnityEditor;
 
-[CustomPropertyDrawer( typeof( SimpleInput.KeyInput ) )]
-public class KeyInputDrawer : BaseInputDrawer
+namespace SimpleInputNamespace
 {
-	public override string ValueToString( SerializedProperty valueProperty )
+	[CustomPropertyDrawer( typeof( SimpleInput.KeyInput ) )]
+	public class KeyInputDrawer : BaseInputDrawer
 	{
-		return valueProperty.boolValue.ToString();
+		public override string ValueToString( SerializedProperty valueProperty )
+		{
+			return valueProperty.boolValue.ToString();
+		}
 	}
 }

@@ -1,10 +1,13 @@
 ﻿using UnityEditor;
 
-[CustomPropertyDrawer( typeof( SimpleInput.MouseButtonInput ) )]
-public class MouseButtonInputDrawer : BaseInputDrawer
+namespace SimpleInputNamespace
 {
-	public override string ValueToString( SerializedProperty valueProperty )
+	[CustomPropertyDrawer( typeof( SimpleInput.MouseButtonInput ) )]
+	public class MouseButtonInputDrawer : BaseInputDrawer
 	{
-		return valueProperty.boolValue.ToString();
+		public override string ValueToString( SerializedProperty valueProperty )
+		{
+			return valueProperty.boolValue.ToString();
+		}
 	}
 }

@@ -1,10 +1,13 @@
 ﻿using UnityEditor;
 
-[CustomPropertyDrawer( typeof( SimpleInput.AxisInput ) )]
-public class AxisInputDrawer : BaseInputDrawer 
+namespace SimpleInputNamespace
 {
-	public override string ValueToString( SerializedProperty valueProperty )
+	[CustomPropertyDrawer( typeof( SimpleInput.AxisInput ) )]
+	public class AxisInputDrawer : BaseInputDrawer
 	{
-		return valueProperty.floatValue.ToString();
+		public override string ValueToString( SerializedProperty valueProperty )
+		{
+			return valueProperty.floatValue.ToString();
+		}
 	}
 }
