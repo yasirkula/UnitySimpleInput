@@ -8,19 +8,19 @@ namespace SimpleInputNamespace
 	{
 		public SimpleInput.ButtonInput button = new SimpleInput.ButtonInput();
 
-		void Awake()
+		private void Awake()
 		{
 			Graphic graphic = GetComponent<Graphic>();
 			if( graphic != null )
 				graphic.raycastTarget = true;
 		}
 
-		void OnEnable()
+		private void OnEnable()
 		{
 			button.StartTracking();
 		}
 
-		void OnDisable()
+		private void OnDisable()
 		{
 			button.StopTracking();
 		}

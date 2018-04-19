@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace SimpleInputNamespace
 {
@@ -7,13 +8,22 @@ namespace SimpleInputNamespace
 	{
 		public ISimpleInputDraggable Listener { get; set; }
 
-		private int pointerId = -99;
+		private int pointerId = SimpleInputUtils.NON_EXISTING_TOUCH;
+
+		private void Awake()
+		{
+			Graphic graphic = GetComponent<Graphic>();
+			if( graphic == null )
+			{
+				graphic = gameObject.AddComponent<Image>();
+				graphic.color = Color.clear;
+			}
+
+			graphic.raycastTarget = true;
+		}
 
 		public void OnPointerDown( PointerEventData eventData )
 		{
-			if( pointerId != -99 )
-				return;
-
 			Listener.OnPointerDown( eventData );
 			pointerId = eventData.pointerId;
 		}
@@ -21,10 +31,7 @@ namespace SimpleInputNamespace
 		public void OnDrag( PointerEventData eventData )
 		{
 			if( pointerId != eventData.pointerId )
-			{
-				eventData.pointerDrag = null;
 				return;
-			}
 
 			Listener.OnDrag( eventData );
 		}
@@ -35,7 +42,12 @@ namespace SimpleInputNamespace
 				return;
 
 			Listener.OnPointerUp( eventData );
-			pointerId = -99;
+			pointerId = SimpleInputUtils.NON_EXISTING_TOUCH;
+		}
+
+		public void Stop()
+		{
+			pointerId = SimpleInputUtils.NON_EXISTING_TOUCH;
 		}
 	}
 }

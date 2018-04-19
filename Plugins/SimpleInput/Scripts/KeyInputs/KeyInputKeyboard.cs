@@ -8,20 +8,20 @@ namespace SimpleInputNamespace
 		private KeyCode realKey;
 
 		public SimpleInput.KeyInput key = new SimpleInput.KeyInput();
-		
-		void OnEnable()
+
+		private void OnEnable()
 		{
 			key.StartTracking();
 			SimpleInput.OnUpdate += OnUpdate;
 		}
 
-		void OnDisable()
+		private void OnDisable()
 		{
 			key.StopTracking();
 			SimpleInput.OnUpdate -= OnUpdate;
 		}
 
-		void OnUpdate()
+		private void OnUpdate()
 		{
 			key.value = Input.GetKey( realKey );
 		}

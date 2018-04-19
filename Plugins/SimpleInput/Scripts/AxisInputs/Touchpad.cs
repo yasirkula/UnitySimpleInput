@@ -1,143 +1,64 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace SimpleInputNamespace
 {
-	public class Touchpad : MonoBehaviour
+	[RequireComponent( typeof( SimpleInputMultiDragListener ) )]
+	public class Touchpad : SelectivePointerInput, ISimpleInputDraggableMultiTouch
 	{
-		public enum MouseButton { Left = 0, Right = 1, Middle = 2 }
-		
-		public SimpleInput.AxisInput xAxis = new SimpleInput.AxisInput( "Mouse X" );
-		public SimpleInput.AxisInput yAxis = new SimpleInput.AxisInput( "Mouse Y" );
+		public SimpleInput.AxisInput xAxis = new SimpleInput.AxisInput( "Horizontal" );
+		public SimpleInput.AxisInput yAxis = new SimpleInput.AxisInput( "Vertical" );
 
-		private RectTransform rectTransform;
-
+		public bool invertHorizontal, invertVertical;
 		public float sensitivity = 1f;
 
-		[Tooltip( "Should touchpad allow touch inputs on touchscreens, or mouse input only" )]
-		public bool allowTouchInput = true;
+		private SimpleInputMultiDragListener eventReceiver;
 
-		[Tooltip( "Valid mouse buttons that can register input through this touchpad" )]
-		public MouseButton[] allowedMouseButtons;
-
-		[Tooltip( "Should a touch on a UI element be considered valid" )]
-		public bool ignoreUIElements = false;
-
-		private float resolutionMultiplier;
-		private int fingerId = -1;
-
-		private Vector2 prevMouseInputPos;
-		private bool trackMouseInput = false;
+		public int Priority { get { return 1; } }
 
 		private Vector2 m_value = Vector2.zero;
 		public Vector2 Value { get { return m_value; } }
 
-		void Awake()
+		private void Awake()
 		{
-			rectTransform = transform as RectTransform;
-			resolutionMultiplier = 100f / ( Screen.width + Screen.height );
-
-			Graphic graphic = GetComponent<Graphic>();
-			if( graphic != null )
-				graphic.raycastTarget = false;
+			eventReceiver = GetComponent<SimpleInputMultiDragListener>();
 		}
 
-		void OnEnable()
+		private void OnEnable()
 		{
+			eventReceiver.AddListener( this );
+
 			xAxis.StartTracking();
 			yAxis.StartTracking();
-
-			SimpleInput.OnUpdate += OnUpdate;
 		}
 
-		void OnDisable()
+		private void OnDisable()
 		{
+			eventReceiver.RemoveListener( this );
+
 			xAxis.StopTracking();
 			yAxis.StopTracking();
-
-			SimpleInput.OnUpdate -= OnUpdate;
 		}
 
-		void OnUpdate()
+		public bool OnUpdate( List<PointerEventData> mousePointers, List<PointerEventData> touchPointers, ISimpleInputDraggableMultiTouch activeListener )
 		{
-			EventSystem eventSystem = EventSystem.current;
+			xAxis.value = 0f;
+			yAxis.value = 0f;
 
-			m_value.Set( 0f, 0f );
+			if( activeListener != null && activeListener.Priority > Priority )
+				return false;
 
-			if( allowTouchInput && Input.touchCount > 0 )
-			{
-				for( int i = 0; i < Input.touchCount; i++ )
-				{
-					Touch touch = Input.GetTouch( i );
-					if( fingerId == -1 )
-					{
-						if( touch.phase == TouchPhase.Began &&
-							( rectTransform == null || RectTransformUtility.RectangleContainsScreenPoint( rectTransform, touch.position ) ) &&
-							( ignoreUIElements || eventSystem == null || !eventSystem.IsPointerOverGameObject( touch.fingerId ) ) )
-						{
-							fingerId = touch.fingerId;
-							break;
-						}
-					}
-					else if( touch.fingerId == fingerId )
-					{
-						m_value = touch.deltaPosition * resolutionMultiplier * sensitivity;
+			PointerEventData pointer = GetSatisfyingPointer( mousePointers, touchPointers );
+			if( pointer == null )
+				return false;
 
-						if( touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled )
-							fingerId = -1;
+			m_value = pointer.delta * SimpleInputUtils.ResolutionMultiplier * sensitivity;
 
-						break;
-					}
-				}
-			}
-			else
-			{
-				if( GetMouseButtonDown() )
-				{
-					Vector2 mousePos = Input.mousePosition;
+			xAxis.value = invertHorizontal ? -m_value.x : m_value.x;
+			yAxis.value = invertVertical ? -m_value.y : m_value.y;
 
-					if( ( rectTransform == null || RectTransformUtility.RectangleContainsScreenPoint( rectTransform, mousePos ) ) &&
-						( ignoreUIElements || eventSystem == null || !eventSystem.IsPointerOverGameObject() ) )
-					{
-						trackMouseInput = true;
-						prevMouseInputPos = Input.mousePosition;
-					}
-					else
-						trackMouseInput = false;
-				}
-				else if( trackMouseInput && GetMouseButton() )
-				{
-					Vector2 mousePos = Input.mousePosition;
-					m_value = ( mousePos - prevMouseInputPos ) * resolutionMultiplier * sensitivity;
-					prevMouseInputPos = mousePos;
-				}
-			}
-
-			xAxis.value = m_value.x;
-			yAxis.value = m_value.y;
-		}
-
-		private bool GetMouseButtonDown()
-		{
-			for( int i = 0; i < allowedMouseButtons.Length; i++ )
-			{
-				if( Input.GetMouseButtonDown( (int) allowedMouseButtons[i] ) )
-					return true;
-			}
-
-			return false;
-		}
-
-		private bool GetMouseButton()
-		{
-			for( int i = 0; i < allowedMouseButtons.Length; i++ )
-			{
-				if( Input.GetMouseButtonDown( (int) allowedMouseButtons[i] ) )
-					return true;
-			}
-
-			return false;
+			return true;
 		}
 	}
 }

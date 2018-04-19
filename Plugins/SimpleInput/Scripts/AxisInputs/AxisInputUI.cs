@@ -6,24 +6,22 @@ namespace SimpleInputNamespace
 {
 	public class AxisInputUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	{
-		[SerializeField]
-		private float value;
-
 		public SimpleInput.AxisInput axis = new SimpleInput.AxisInput();
+		public float value = 1f;
 
-		void Awake()
+		private void Awake()
 		{
 			Graphic graphic = GetComponent<Graphic>();
 			if( graphic != null )
 				graphic.raycastTarget = true;
 		}
 
-		void OnEnable()
+		private void OnEnable()
 		{
 			axis.StartTracking();
 		}
 
-		void OnDisable()
+		private void OnDisable()
 		{
 			axis.StopTracking();
 		}

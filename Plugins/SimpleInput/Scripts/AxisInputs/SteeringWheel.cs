@@ -15,39 +15,40 @@ namespace SimpleInputNamespace
 
 		public float maximumSteeringAngle = 200f;
 		public float wheelReleasedSpeed = 350f;
+		public float valueMultiplier = 1f;
 
 		private float wheelAngle = 0f;
 		private float wheelPrevAngle = 0f;
 
 		private bool wheelBeingHeld = false;
 
-		public float Value { get { return wheelAngle / maximumSteeringAngle; } }
+		private float m_value;
+		public float Value { get { return m_value; } }
+
 		public float Angle { get { return wheelAngle; } }
 
-		void Awake()
+		private void Awake()
 		{
 			wheel = GetComponent<Graphic>();
 			wheelTR = wheel.rectTransform;
-
-			wheel.raycastTarget = true;
 
 			SimpleInputDragListener eventReceiver = gameObject.AddComponent<SimpleInputDragListener>();
 			eventReceiver.Listener = this;
 		}
 
-		void OnEnable()
+		private void OnEnable()
 		{
 			axis.StartTracking();
 			SimpleInput.OnUpdate += OnUpdate;
 		}
 
-		void OnDisable()
+		private void OnDisable()
 		{
 			axis.StopTracking();
 			SimpleInput.OnUpdate -= OnUpdate;
 		}
 
-		void OnUpdate()
+		private void OnUpdate()
 		{
 			// If the wheel is released, reset the rotation
 			// to initial (zero) rotation by wheelReleasedSpeed degrees per second
@@ -65,14 +66,15 @@ namespace SimpleInputNamespace
 			// Rotate the wheel image
 			wheelTR.localEulerAngles = new Vector3( 0f, 0f, -wheelAngle );
 
-			axis.value = Value;
+			m_value = wheelAngle * valueMultiplier / maximumSteeringAngle;
+			axis.value = m_value;
 		}
 
 		public void OnPointerDown( PointerEventData eventData )
 		{
 			// Executed when mouse/finger starts touching the steering wheel
 			wheelBeingHeld = true;
-			centerPoint = wheelTR.position;
+			centerPoint = RectTransformUtility.WorldToScreenPoint( eventData.pressEventCamera, wheelTR.position );
 			wheelPrevAngle = Vector2.Angle( Vector2.up, eventData.position - centerPoint );
 		}
 
@@ -84,7 +86,7 @@ namespace SimpleInputNamespace
 			float wheelNewAngle = Vector2.Angle( Vector2.up, pointerPos - centerPoint );
 
 			// Do nothing if the pointer is too close to the center of the wheel
-			if( Vector2.Distance( pointerPos, centerPoint ) > 20f )
+			if( ( pointerPos - centerPoint ).sqrMagnitude >= 400f )
 			{
 				if( pointerPos.x > centerPoint.x )
 					wheelAngle += wheelNewAngle - wheelPrevAngle;

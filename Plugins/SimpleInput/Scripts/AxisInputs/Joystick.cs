@@ -7,7 +7,7 @@ namespace SimpleInputNamespace
 	public class Joystick : MonoBehaviour, ISimpleInputDraggable
 	{
 		public enum MovementAxes { XandY, X, Y };
-		
+
 		public SimpleInput.AxisInput xAxis = new SimpleInput.AxisInput( "Horizontal" );
 		public SimpleInput.AxisInput yAxis = new SimpleInput.AxisInput( "Vertical" );
 
@@ -19,6 +19,7 @@ namespace SimpleInputNamespace
 		private RectTransform thumbTR;
 
 		public MovementAxes movementAxes = MovementAxes.XandY;
+		public float valueMultiplier = 1f;
 
 		[SerializeField]
 		private float movementAreaRadius = 75f;
@@ -26,7 +27,8 @@ namespace SimpleInputNamespace
 		[SerializeField]
 		private bool isDynamicJoystick = false;
 
-		public RectTransform dynamicJoystickMovementArea;
+		[SerializeField]
+		private RectTransform dynamicJoystickMovementArea;
 
 		private bool joystickHeld = false;
 		private Vector2 pointerInitialPos;
@@ -39,7 +41,7 @@ namespace SimpleInputNamespace
 		private Vector2 m_value = Vector2.zero;
 		public Vector2 Value { get { return m_value; } }
 
-		void Awake()
+		private void Awake()
 		{
 			joystickTR = (RectTransform) transform;
 			thumbTR = thumb.rectTransform;
@@ -65,7 +67,7 @@ namespace SimpleInputNamespace
 			movementAreaRadiusSqr = movementAreaRadius * movementAreaRadius;
 		}
 
-		void Start()
+		private void Start()
 		{
 			SimpleInputDragListener eventReceiver;
 			if( !isDynamicJoystick )
@@ -100,7 +102,7 @@ namespace SimpleInputNamespace
 			eventReceiver.Listener = this;
 		}
 
-		void OnEnable()
+		private void OnEnable()
 		{
 			xAxis.StartTracking();
 			yAxis.StartTracking();
@@ -108,7 +110,7 @@ namespace SimpleInputNamespace
 			SimpleInput.OnUpdate += OnUpdate;
 		}
 
-		void OnDisable()
+		private void OnDisable()
 		{
 			xAxis.StopTracking();
 			yAxis.StopTracking();
@@ -126,13 +128,13 @@ namespace SimpleInputNamespace
 				joystickTR.position = eventData.position;
 			}
 			else
-				RectTransformUtility.ScreenPointToLocalPointInRectangle( joystickTR, eventData.position, thumb.canvas.worldCamera, out pointerInitialPos );
+				RectTransformUtility.ScreenPointToLocalPointInRectangle( joystickTR, eventData.position, eventData.pressEventCamera, out pointerInitialPos );
 		}
 
 		public void OnDrag( PointerEventData eventData )
 		{
 			Vector2 pointerPos;
-			RectTransformUtility.ScreenPointToLocalPointInRectangle( joystickTR, eventData.position, thumb.canvas.worldCamera, out pointerPos );
+			RectTransformUtility.ScreenPointToLocalPointInRectangle( joystickTR, eventData.position, eventData.pressEventCamera, out pointerPos );
 
 			Vector2 direction = pointerPos - pointerInitialPos;
 			if( movementAxes == MovementAxes.X )
@@ -143,7 +145,7 @@ namespace SimpleInputNamespace
 			if( direction.sqrMagnitude > movementAreaRadiusSqr )
 				direction = direction.normalized * movementAreaRadius;
 
-			m_value = direction * _1OverMovementAreaRadius;
+			m_value = direction * _1OverMovementAreaRadius * valueMultiplier;
 
 			thumbTR.localPosition = direction;
 
@@ -162,15 +164,15 @@ namespace SimpleInputNamespace
 			yAxis.value = 0f;
 		}
 
-		void OnUpdate()
+		private void OnUpdate()
 		{
 			if( !isDynamicJoystick )
 				return;
 
 			if( joystickHeld )
-				opacity = Mathf.Min( 1f, opacity + Time.deltaTime * 4f );
+				opacity = Mathf.Min( 1f, opacity + Time.unscaledDeltaTime * 4f );
 			else
-				opacity = Mathf.Max( 0f, opacity - Time.deltaTime * 4f );
+				opacity = Mathf.Max( 0f, opacity - Time.unscaledDeltaTime * 4f );
 
 			Color c = thumb.color;
 			c.a = opacity;

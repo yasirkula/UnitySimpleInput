@@ -482,7 +482,7 @@ public class SimpleInput : MonoBehaviour
 		}
 	}
 
-	void Update()
+	private void Update()
 	{
 		if( OnUpdate != null )
 			OnUpdate();

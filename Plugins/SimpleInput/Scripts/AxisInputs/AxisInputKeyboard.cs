@@ -7,24 +7,22 @@ namespace SimpleInputNamespace
 		[SerializeField]
 		private KeyCode key;
 
-		[SerializeField]
-		private float value;
-		
 		public SimpleInput.AxisInput axis = new SimpleInput.AxisInput();
+		public float value = 1f;
 
-		void OnEnable()
+		private void OnEnable()
 		{
 			axis.StartTracking();
 			SimpleInput.OnUpdate += OnUpdate;
 		}
 
-		void OnDisable()
+		private void OnDisable()
 		{
 			axis.StopTracking();
 			SimpleInput.OnUpdate -= OnUpdate;
 		}
 
-		void OnUpdate()
+		private void OnUpdate()
 		{
 			axis.value = Input.GetKey( key ) ? value : 0f;
 		}

@@ -2,7 +2,14 @@
 
 namespace SimpleInputNamespace
 {
-	public abstract class BaseInput<K, V>
+	public interface IBaseInput
+	{
+		void StartTracking();
+		void StopTracking();
+		void ResetValue();
+	}
+
+	public abstract class BaseInput<K, V> : IBaseInput
 	{
 		[SerializeField]
 		private K m_key;
@@ -23,7 +30,7 @@ namespace SimpleInputNamespace
 				}
 			}
 		}
-		
+
 		public V value;
 		private bool isTracking = false;
 
@@ -56,10 +63,15 @@ namespace SimpleInputNamespace
 			}
 		}
 
+		public void ResetValue()
+		{
+			value = default( V );
+		}
+
 		protected abstract void RegisterInput();
 		protected abstract void UnregisterInput();
 		protected abstract bool KeysEqual( K key1, K key2 );
-
+		
 		public virtual bool IsKeyValid()
 		{
 			return true;

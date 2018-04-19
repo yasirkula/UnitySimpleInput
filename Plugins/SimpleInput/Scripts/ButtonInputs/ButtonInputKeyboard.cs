@@ -8,20 +8,20 @@ namespace SimpleInputNamespace
 		private KeyCode key;
 
 		public SimpleInput.ButtonInput button = new SimpleInput.ButtonInput();
-		
-		void OnEnable()
+
+		private void OnEnable()
 		{
 			button.StartTracking();
 			SimpleInput.OnUpdate += OnUpdate;
 		}
 
-		void OnDisable()
+		private void OnDisable()
 		{
 			button.StopTracking();
 			SimpleInput.OnUpdate -= OnUpdate;
 		}
 
-		void OnUpdate()
+		private void OnUpdate()
 		{
 			button.value = Input.GetKey( key );
 		}
