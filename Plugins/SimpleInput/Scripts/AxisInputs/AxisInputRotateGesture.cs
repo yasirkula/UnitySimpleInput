@@ -37,7 +37,6 @@ namespace SimpleInputNamespace
 
 		public bool OnUpdate( List<PointerEventData> mousePointers, List<PointerEventData> touchPointers, ISimpleInputDraggableMultiTouch activeListener )
 		{
-			print( touchPointers.Count );
 			axis.value = 0f;
 
 			if( activeListener != null && activeListener.Priority > Priority )
