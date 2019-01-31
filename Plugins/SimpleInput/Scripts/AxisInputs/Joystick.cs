@@ -125,7 +125,11 @@ namespace SimpleInputNamespace
 			if( isDynamicJoystick )
 			{
 				pointerInitialPos = Vector2.zero;
-				joystickTR.position = eventData.position;
+
+				Vector3 joystickPos;
+				RectTransformUtility.ScreenPointToWorldPointInRectangle( dynamicJoystickMovementArea, eventData.position, eventData.pressEventCamera, out joystickPos );
+				joystickTR.position = joystickPos;
+
 			}
 			else
 				RectTransformUtility.ScreenPointToLocalPointInRectangle( joystickTR, eventData.position, eventData.pressEventCamera, out pointerInitialPos );
