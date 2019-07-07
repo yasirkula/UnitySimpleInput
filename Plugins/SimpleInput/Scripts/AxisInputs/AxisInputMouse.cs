@@ -7,7 +7,7 @@ namespace SimpleInputNamespace
 		public SimpleInput.AxisInput xAxis = new SimpleInput.AxisInput();
 		public SimpleInput.AxisInput yAxis = new SimpleInput.AxisInput();
 
-//#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL || UNITY_FACEBOOK || UNITY_WSA || UNITY_WSA_10_0
+		//#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL || UNITY_FACEBOOK || UNITY_WSA || UNITY_WSA_10_0
 		private void OnEnable()
 		{
 			xAxis.StartTracking();
@@ -37,6 +37,6 @@ namespace SimpleInputNamespace
 				yAxis.value = 0f;
 			}
 		}
-//#endif
+		//#endif
 	}
 }

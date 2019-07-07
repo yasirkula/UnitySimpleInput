@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace SimpleInputNamespace
 {
@@ -12,7 +11,6 @@ namespace SimpleInputNamespace
 		public float valueMultiplier = 1f;
 
 		private RectTransform rectTransform;
-		private Graphic background;
 
 		private Vector2 m_value = Vector2.zero;
 		public Vector2 Value { get { return m_value; } }

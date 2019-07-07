@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class ExamplePlayerController : MonoBehaviour 
+public class ExamplePlayerController : MonoBehaviour
 {
 	public Color materialColor;
 	private Rigidbody m_rigidbody;

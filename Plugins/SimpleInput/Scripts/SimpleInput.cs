@@ -114,7 +114,32 @@ public class SimpleInput : MonoBehaviour
 	}
 	#endregion
 
-	private const float AXIS_LERP_MODIFIER = 20f;
+	public static float AxisLerpModifier = 20f;
+
+	private static bool m_trackUnityInput = true;
+	public static bool TrackUnityInput
+	{
+		get { return m_trackUnityInput; }
+		set
+		{
+			if( m_trackUnityInput != value )
+			{
+				m_trackUnityInput = value;
+
+				if( !m_trackUnityInput )
+				{
+					for( int i = 0; i < trackedUnityAxes.Count; i++ )
+						trackedUnityAxes[i].ResetValue();
+
+					for( int i = 0; i < trackedUnityButtons.Count; i++ )
+						trackedUnityButtons[i].ResetValue();
+
+					for( int i = 0; i < trackedUnityMouseButtons.Count; i++ )
+						trackedUnityMouseButtons[i].ResetValue();
+				}
+			}
+		}
+	}
 
 	// Singleton instance
 	private static SimpleInput instance;
@@ -175,7 +200,7 @@ public class SimpleInput : MonoBehaviour
 		for( int i = 0; i < trackedTemporaryButtons.Count; i++ )
 			trackedTemporaryButtons[i].StopTracking();
 
-		for( int i = 0; i < trackedTemporaryButtons.Count; i++ )
+		for( int i = 0; i < trackedTemporaryMouseButtons.Count; i++ )
 			trackedTemporaryMouseButtons[i].StopTracking();
 
 		trackedTemporaryAxes.Clear();
@@ -274,7 +299,7 @@ public class SimpleInput : MonoBehaviour
 
 	public static bool GetKeyDown( KeyCode key )
 	{
-		if( Input.GetKeyDown( key ) )
+		if( TrackUnityInput && Input.GetKeyDown( key ) )
 			return true;
 
 		Key keyInput;
@@ -286,7 +311,7 @@ public class SimpleInput : MonoBehaviour
 
 	public static bool GetKey( KeyCode key )
 	{
-		if( Input.GetKey( key ) )
+		if( TrackUnityInput && Input.GetKey( key ) )
 			return true;
 
 		Key keyInput;
@@ -298,7 +323,7 @@ public class SimpleInput : MonoBehaviour
 
 	public static bool GetKeyUp( KeyCode key )
 	{
-		if( Input.GetKeyUp( key ) )
+		if( TrackUnityInput && Input.GetKeyUp( key ) )
 			return true;
 
 		Key keyInput;
@@ -430,6 +455,9 @@ public class SimpleInput : MonoBehaviour
 		try
 		{
 			AxisInput unityAxis = new AxisInput( axis ) { value = Input.GetAxisRaw( axis ) };
+			if( !m_trackUnityInput )
+				unityAxis.ResetValue();
+
 			trackedUnityAxes.Add( unityAxis );
 			unityAxis.StartTracking();
 		}
@@ -449,6 +477,9 @@ public class SimpleInput : MonoBehaviour
 		try
 		{
 			ButtonInput unityButton = new ButtonInput( button ) { value = Input.GetButton( button ) };
+			if( !m_trackUnityInput )
+				unityButton.ResetValue();
+
 			trackedUnityButtons.Add( unityButton );
 			unityButton.StartTracking();
 		}
@@ -468,6 +499,9 @@ public class SimpleInput : MonoBehaviour
 		try
 		{
 			MouseButtonInput unityMouseButton = new MouseButtonInput( button ) { value = Input.GetMouseButton( button ) };
+			if( !m_trackUnityInput )
+				unityMouseButton.ResetValue();
+
 			trackedUnityMouseButtons.Add( unityMouseButton );
 			unityMouseButton.StartTracking();
 		}
@@ -487,16 +521,19 @@ public class SimpleInput : MonoBehaviour
 		if( OnUpdate != null )
 			OnUpdate();
 
-		for( int i = 0; i < trackedUnityAxes.Count; i++ )
-			trackedUnityAxes[i].value = Input.GetAxisRaw( trackedUnityAxes[i].Key );
+		if( m_trackUnityInput )
+		{
+			for( int i = 0; i < trackedUnityAxes.Count; i++ )
+				trackedUnityAxes[i].value = Input.GetAxisRaw( trackedUnityAxes[i].Key );
 
-		for( int i = 0; i < trackedUnityButtons.Count; i++ )
-			trackedUnityButtons[i].value = Input.GetButton( trackedUnityButtons[i].Key );
+			for( int i = 0; i < trackedUnityButtons.Count; i++ )
+				trackedUnityButtons[i].value = Input.GetButton( trackedUnityButtons[i].Key );
 
-		for( int i = 0; i < trackedUnityMouseButtons.Count; i++ )
-			trackedUnityMouseButtons[i].value = Input.GetMouseButton( trackedUnityMouseButtons[i].Key );
+			for( int i = 0; i < trackedUnityMouseButtons.Count; i++ )
+				trackedUnityMouseButtons[i].value = Input.GetMouseButton( trackedUnityMouseButtons[i].Key );
+		}
 
-		float lerpModifier = AXIS_LERP_MODIFIER * Time.deltaTime;
+		float lerpModifier = AxisLerpModifier * Time.deltaTime;
 
 		for( int i = 0; i < axesList.Count; i++ )
 		{

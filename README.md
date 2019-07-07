@@ -9,7 +9,7 @@
 
 ## ABOUT
 
-SimpleInput is a replacement for Unity's standard **Input** system that allows you to use your own input providers for axes, buttons, mouse buttons and keys. In other words, it lets you simulate e.g. Input.GetAxis when a button is pressed or a joystick is dragged. It also supports using custom axes and buttons that don't necessarily exist in Edit-Project Settings-Input.
+SimpleInput is an improvement over Unity's standard **Input** system that allows you to use custom input providers like on-screen joysticks, UI buttons and d-pads. In other words, it lets you simulate e.g. Input.GetAxis when a button is pressed or a virtual joystick is dragged. It also supports using custom axes and buttons that don't necessarily exist in Edit-Project Settings-Input.
 
 To use the SimpleInput system, simply replace Input with **SimpleInput** in your scripts; i.e:
 
@@ -27,11 +27,13 @@ To use the SimpleInput system, simply replace Input with **SimpleInput** in your
 
 Note that there is no replacement for *Input.GetKey(string)* function. You have to convert the string to the corresponding **KeyCode** to benefit from *SimpleInput.GetKey(KeyCode)* function.
 
-SimpleInput works almost identically to standard Input system; only the lerping of Input.GetAxis might differ slightly.
+By default, SimpleInput receives input from Unity's Input system, as well. That's why your code keeps working as is after changing Input to SimpleInput. If you want, you can disable this behaviour so that SimpleInput receives input from custom input providers only. Simply calling `SimpleInput.TrackUnityInput = false;` will do the trick. It is possible to let a subset of the standard Unity inputs continue providing input to SimpleInput via the **UnityInputProvider** component.
+
+SimpleInput works almost identically to standard Input system; only the lerping of Input.GetAxis might differ slightly. Lerp modifier can be configured via `SimpleInput.AxisLerpModifier`.
 
 ## UPGRADING FROM PREVIOUS VERSIONS
 
-Values of axes, buttons, mouse buttons and keys in SimpleInput components will be reset after the upgrade. So, you should write down these values somewhere before upgrading the plugin.
+If you are upgrading from a very old version of SimpleInput, values of axes, buttons, mouse buttons and keys in SimpleInput components might get reset after the upgrade. So, you should write down these values somewhere before upgrading the plugin.
 
 ## BUILT-IN INPUT COMPONENTS
 
@@ -68,7 +70,7 @@ Values of axes, buttons, mouse buttons and keys in SimpleInput components will b
 
 To send an input while a mouse button is held down, you can use the XInputKeyboard component and set the key to the desired mouse button: *KeyCode.Mouse0*, *KeyCode.Mouse1*, etc.
 
-**Prefabs** folder contains some plug 'n' play prefabs. Drag & drop them to your canvas and you are good to go! You can also customize them using the sprites provided in the **Sprites** folder (or using your own sprites, obviously).
+**Prefabs** folder contains some plug 'n' play prefabs. Drag & drop them to your canvas and you are good to go! You can also customize them using the sprites provided in the **Sprites** folder (or using your own sprites, obviously). For more resources, open **ExtraResources.unitypackage**.
 
 ## REBINDING INPUTS
 

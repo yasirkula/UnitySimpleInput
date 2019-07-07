@@ -14,12 +14,13 @@ namespace SimpleInputNamespace
 		private RectTransform joystickTR;
 		private Image background;
 
+		public MovementAxes movementAxes = MovementAxes.XandY;
+		public float valueMultiplier = 1f;
+
+#pragma warning disable 0649
 		[SerializeField]
 		private Image thumb;
 		private RectTransform thumbTR;
-
-		public MovementAxes movementAxes = MovementAxes.XandY;
-		public float valueMultiplier = 1f;
 
 		[SerializeField]
 		private float movementAreaRadius = 75f;
@@ -29,6 +30,7 @@ namespace SimpleInputNamespace
 
 		[SerializeField]
 		private RectTransform dynamicJoystickMovementArea;
+#pragma warning restore 0649
 
 		private bool joystickHeld = false;
 		private Vector2 pointerInitialPos;

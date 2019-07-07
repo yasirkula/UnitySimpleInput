@@ -42,10 +42,8 @@ namespace SimpleInputNamespace
 
 			if( touchPointers.Count < 2 )
 			{
-#pragma warning disable 0252
-				if( activeListener == this && touchPointers.Count == 1 )
+				if( ReferenceEquals( activeListener, this ) && touchPointers.Count == 1 )
 					touchPointers[0].pressPosition = touchPointers[0].position;
-#pragma warning restore 0252
 
 				return false;
 			}

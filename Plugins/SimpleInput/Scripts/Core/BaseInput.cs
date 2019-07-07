@@ -11,6 +11,7 @@ namespace SimpleInputNamespace
 
 	public abstract class BaseInput<K, V> : IBaseInput
 	{
+#pragma warning disable 0649
 		[SerializeField]
 		private K m_key;
 		public K Key
@@ -30,6 +31,7 @@ namespace SimpleInputNamespace
 				}
 			}
 		}
+#pragma warning restore 0649
 
 		public V value;
 		private bool isTracking = false;
@@ -71,7 +73,7 @@ namespace SimpleInputNamespace
 		protected abstract void RegisterInput();
 		protected abstract void UnregisterInput();
 		protected abstract bool KeysEqual( K key1, K key2 );
-		
+
 		public virtual bool IsKeyValid()
 		{
 			return true;

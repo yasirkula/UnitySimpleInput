@@ -15,7 +15,7 @@ namespace SimpleInputNamespace
 		public bool clockwise = true;
 
 		private SimpleInputMultiDragListener eventReceiver;
-		
+
 		public int Priority { get { return 2; } }
 
 		private void Awake()
@@ -44,10 +44,8 @@ namespace SimpleInputNamespace
 
 			if( touchPointers.Count < 2 )
 			{
-#pragma warning disable 0252
-				if( activeListener == this && touchPointers.Count == 1 )
+				if( ReferenceEquals( activeListener, this ) && touchPointers.Count == 1 )
 					touchPointers[0].pressPosition = touchPointers[0].position;
-#pragma warning restore 0252
 
 				return false;
 			}
@@ -57,7 +55,7 @@ namespace SimpleInputNamespace
 
 			Vector2 deltaPosition = touch2.position - touch1.position;
 			Vector2 prevDeltaPosition = deltaPosition - ( touch2.delta - touch1.delta );
-			
+
 			float deltaAngle = ( Mathf.Atan2( prevDeltaPosition.y, prevDeltaPosition.x ) - Mathf.Atan2( deltaPosition.y, deltaPosition.x ) ) * MULTIPLIER;
 			if( deltaAngle > 180f )
 				deltaAngle -= 360f;

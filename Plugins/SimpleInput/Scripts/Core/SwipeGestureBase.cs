@@ -8,7 +8,7 @@ namespace SimpleInputNamespace
 	public abstract class SwipeGestureBase<K, V> : SelectivePointerInput, ISimpleInputDraggableMultiTouch
 	{
 		public Vector2 swipeAmount = new Vector2( 0f, 25f );
-		
+
 		private SimpleInputMultiDragListener eventReceiver;
 
 		protected abstract BaseInput<K, V> Input { get; }
@@ -44,10 +44,8 @@ namespace SimpleInputNamespace
 			if( pointer == null )
 				return false;
 
-#pragma warning disable 0252
 			if( !IsSwipeSatisfied( pointer ) )
-				return activeListener == this;
-#pragma warning restore 0252
+				return ReferenceEquals( activeListener, this );
 
 			Input.value = Value;
 			return true;
