@@ -23,11 +23,8 @@ namespace SimpleInputNamespace
 		private void Awake()
 		{
 			Graphic graphic = GetComponent<Graphic>();
-			if( graphic == null )
-			{
-				graphic = gameObject.AddComponent<Image>();
-				graphic.color = Color.clear;
-			}
+			if( !graphic )
+				graphic = gameObject.AddComponent<NonDrawingGraphic>();
 
 			graphic.raycastTarget = true;
 		}

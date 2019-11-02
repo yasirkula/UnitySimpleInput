@@ -12,7 +12,7 @@ namespace SimpleInputNamespace
 		public SimpleInput.AxisInput yAxis = new SimpleInput.AxisInput( "Vertical" );
 
 		private RectTransform joystickTR;
-		private Image background;
+		private Graphic background;
 
 		public MovementAxes movementAxes = MovementAxes.XandY;
 		public float valueMultiplier = 1f;
@@ -48,10 +48,10 @@ namespace SimpleInputNamespace
 			joystickTR = (RectTransform) transform;
 			thumbTR = thumb.rectTransform;
 
-			Image bgImage = GetComponent<Image>();
-			if( bgImage != null )
+			Graphic bgGraphic = GetComponent<Graphic>();
+			if( bgGraphic )
 			{
-				background = bgImage;
+				background = bgGraphic;
 				background.raycastTarget = false;
 			}
 
@@ -67,6 +67,8 @@ namespace SimpleInputNamespace
 
 			_1OverMovementAreaRadius = 1f / movementAreaRadius;
 			movementAreaRadiusSqr = movementAreaRadius * movementAreaRadius;
+
+			thumbTR.localPosition = Vector3.zero;
 		}
 
 		private void Start()
@@ -76,27 +78,16 @@ namespace SimpleInputNamespace
 				eventReceiver = thumbTR.gameObject.AddComponent<SimpleInputDragListener>();
 			else
 			{
-				if( dynamicJoystickMovementArea == null )
+				if( !dynamicJoystickMovementArea )
 				{
-					Transform canvasTransform = thumb.canvas.transform;
-					dynamicJoystickMovementArea = new GameObject( "Dynamic Joystick Movement Area", typeof( RectTransform ), typeof( Image ) ).GetComponent<RectTransform>();
-
-					dynamicJoystickMovementArea.SetParent( canvasTransform, false );
+					dynamicJoystickMovementArea = new GameObject( "Dynamic Joystick Movement Area", typeof( RectTransform ) ).GetComponent<RectTransform>();
+					dynamicJoystickMovementArea.SetParent( thumb.canvas.transform, false );
 					dynamicJoystickMovementArea.SetAsFirstSibling();
-
 					dynamicJoystickMovementArea.anchorMin = Vector2.zero;
 					dynamicJoystickMovementArea.anchorMax = Vector2.one;
 					dynamicJoystickMovementArea.sizeDelta = Vector2.zero;
 					dynamicJoystickMovementArea.anchoredPosition = Vector2.zero;
 				}
-
-				Image dynamicJoystickMovementAreaRaycastTarget = dynamicJoystickMovementArea.GetComponent<Image>();
-				if( dynamicJoystickMovementAreaRaycastTarget == null )
-					dynamicJoystickMovementAreaRaycastTarget = dynamicJoystickMovementArea.gameObject.AddComponent<Image>();
-
-				dynamicJoystickMovementAreaRaycastTarget.sprite = thumb.sprite;
-				dynamicJoystickMovementAreaRaycastTarget.color = Color.clear;
-				dynamicJoystickMovementAreaRaycastTarget.raycastTarget = true;
 
 				eventReceiver = dynamicJoystickMovementArea.gameObject.AddComponent<SimpleInputDragListener>();
 			}
@@ -184,7 +175,7 @@ namespace SimpleInputNamespace
 			c.a = opacity;
 			thumb.color = c;
 
-			if( background != null )
+			if( background )
 			{
 				c = background.color;
 				c.a = opacity;
