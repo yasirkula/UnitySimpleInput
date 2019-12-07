@@ -23,7 +23,7 @@ SimpleInput works almost identically to standard Input system; only the lerping 
 - AxisInputRotateGesture: provides axis input while rotate gesture is performed with two pointers on a RectTransform
 - AxisInputSwipeGesture: provides axis input while a pointer is swiped by a specified amount on a RectTransform
 - Dpad: provides -1, 0 or 1 as axis input for x and y axes while the Dpad is held down; works similar to joystick Dpads
-- Joystick: a standard on-screen joystick input. If Is Dynamic Joystick is selected, joystick only appears while a pointer touches the screen. Dynamic Joystick Movement Area specifies the zone that the dynamic joystick can appear in (leave blank to use the whole canvas)
+- Joystick: a standard on-screen joystick input. If "Is Dynamic Joystick" is selected, joystick only appears while a pointer touches the screen. "Dynamic Joystick Movement Area" specifies the zone that the dynamic joystick can appear in (leave blank to use the whole canvas). If "Can Follow Pointer" is selected, joystick will follow the cursor when cursor's distance to the joystick is greater than the radius
 - SteeringWheel: provides axis input while the wheel is rotated (by far, the most fun input method to play with =') )
 - Touchpad: provides axis input while a pointer is dragged on a RectTransform
 

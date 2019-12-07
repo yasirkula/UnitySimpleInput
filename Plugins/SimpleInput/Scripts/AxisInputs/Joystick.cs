@@ -30,6 +30,9 @@ namespace SimpleInputNamespace
 
 		[SerializeField]
 		private RectTransform dynamicJoystickMovementArea;
+
+		[SerializeField]
+		private bool canFollowPointer = false;
 #pragma warning restore 0649
 
 		private bool joystickHeld = false;
@@ -37,6 +40,8 @@ namespace SimpleInputNamespace
 
 		private float _1OverMovementAreaRadius;
 		private float movementAreaRadiusSqr;
+
+		private Vector2 joystickInitialPos;
 
 		private float opacity = 1f;
 
@@ -68,6 +73,7 @@ namespace SimpleInputNamespace
 			_1OverMovementAreaRadius = 1f / movementAreaRadius;
 			movementAreaRadiusSqr = movementAreaRadius * movementAreaRadius;
 
+			joystickInitialPos = joystickTR.anchoredPosition;
 			thumbTR.localPosition = Vector3.zero;
 		}
 
@@ -122,7 +128,6 @@ namespace SimpleInputNamespace
 				Vector3 joystickPos;
 				RectTransformUtility.ScreenPointToWorldPointInRectangle( dynamicJoystickMovementArea, eventData.position, eventData.pressEventCamera, out joystickPos );
 				joystickTR.position = joystickPos;
-
 			}
 			else
 				RectTransformUtility.ScreenPointToLocalPointInRectangle( joystickTR, eventData.position, eventData.pressEventCamera, out pointerInitialPos );
@@ -140,7 +145,13 @@ namespace SimpleInputNamespace
 				direction.x = 0f;
 
 			if( direction.sqrMagnitude > movementAreaRadiusSqr )
-				direction = direction.normalized * movementAreaRadius;
+			{
+				Vector2 directionNormalized = direction.normalized * movementAreaRadius;
+				if( canFollowPointer )
+					joystickTR.localPosition += (Vector3) ( direction - directionNormalized );
+
+				direction = directionNormalized;
+			}
 
 			m_value = direction * _1OverMovementAreaRadius * valueMultiplier;
 
@@ -153,9 +164,11 @@ namespace SimpleInputNamespace
 		public void OnPointerUp( PointerEventData eventData )
 		{
 			joystickHeld = false;
-			thumbTR.localPosition = Vector3.zero;
-
 			m_value = Vector2.zero;
+
+			thumbTR.localPosition = Vector3.zero;
+			if( !isDynamicJoystick && canFollowPointer )
+				joystickTR.anchoredPosition = joystickInitialPos;
 
 			xAxis.value = 0f;
 			yAxis.value = 0f;
