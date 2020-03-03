@@ -1,7 +1,7 @@
 # Simple Input for Unity 3D
 ![screenshot](screenshot.png)
 
-**Available on Asset Store:** https://www.assetstore.unity3d.com/en/#!/content/113033
+**Available on Asset Store:** https://assetstore.unity.com/packages/tools/input-management/simple-input-system-113033
 
 **Forum Thread:** https://forum.unity.com/threads/simple-input-use-custom-input-providers-like-joysticks-ui-buttons-and-d-pads-open-source.520504/
 
