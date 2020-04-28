@@ -1,5 +1,6 @@
 # Simple Input for Unity 3D
-![screenshot](screenshot.png)
+
+![screenshot](Images/screenshot.png)
 
 **Available on Asset Store:** https://assetstore.unity.com/packages/tools/input-management/simple-input-system-113033
 
@@ -11,9 +12,19 @@
 
 SimpleInput is an improvement over Unity's standard **Input** system that allows you to use custom input providers like on-screen joysticks, UI buttons and d-pads. In other words, it lets you simulate e.g. Input.GetAxis when a button is pressed or a virtual joystick is dragged. It also supports using custom axes and buttons that don't necessarily exist in Edit-Project Settings-Input.
 
+## INSTALLATION
+
+There are 4 ways to install this plugin:
+
+- import [SimpleInput.unitypackage](https://github.com/yasirkula/UnitySimpleInput/releases) via *Assets-Import Package*
+- clone/[download](https://github.com/yasirkula/UnitySimpleInput/archive/master.zip) this repository and move the *Plugins* folder to your Unity project's *Assets* folder
+- import it from [Asset Store](https://assetstore.unity.com/packages/tools/input-management/simple-input-system-113033)
+- *(via Package Manager)* add the following line to *Packages/manifest.json*:
+  - `"com.yasirkula.simpleinput": "https://github.com/yasirkula/UnitySimpleInput.git",`
+
 ## HOW TO
 
-First, import [SimpleInput.unitypackage](https://github.com/yasirkula/UnitySimpleInput/releases) to your project. To use the SimpleInput system, simply replace Input with **SimpleInput** in your scripts; i.e:
+To use the SimpleInput system, simply replace Input with **SimpleInput** in your scripts; i.e:
 
 - Input.GetAxis -> SimpleInput.GetAxis
 - Input.GetAxisRaw -> SimpleInput.GetAxisRaw
