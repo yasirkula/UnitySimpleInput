@@ -111,6 +111,8 @@ namespace SimpleInputNamespace
 
 		private void OnDisable()
 		{
+			OnPointerUp( null );
+
 			xAxis.StopTracking();
 			yAxis.StopTracking();
 
