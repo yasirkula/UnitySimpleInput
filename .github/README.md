@@ -44,7 +44,7 @@ Note that there is no replacement for *Input.GetKey(string)* function. You have 
 
 By default, SimpleInput receives input from Unity's Input system, as well. That's why your code keeps working as is after changing Input to SimpleInput. If you want, you can disable this behaviour so that SimpleInput receives input from custom input providers only. Simply calling `SimpleInput.TrackUnityInput = false;` will do the trick. It is possible to let a subset of the standard Unity inputs continue providing input to SimpleInput via the **UnityInputProvider** component.
 
-SimpleInput works almost identically to standard Input system; only the lerping of Input.GetAxis might differ slightly. Lerp modifier can be configured via `SimpleInput.AxisLerpModifier`.
+SimpleInput works almost identically to standard Input system; only the lerping of Input.GetAxis might differ slightly. Lerp modifier can be configured via `SimpleInput.GetAxisSensitivity`.
 
 ## BUILT-IN INPUT COMPONENTS
 
