@@ -1,7 +1,7 @@
 {
   "name": "com.yasirkula.simpleinput",
   "displayName": "Simple Input System",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "description": "SimpleInput is an improvement over Unity's standard Input system that allows you to use custom input providers like on-screen joysticks, UI buttons and d-pads. In other words, it lets you simulate e.g. Input.GetAxis when a button is pressed or a virtual joystick is dragged. It also supports using custom axes and buttons that don't necessarily exist in Edit-Project Settings-Input.",
   "hideInEditor": false
 }

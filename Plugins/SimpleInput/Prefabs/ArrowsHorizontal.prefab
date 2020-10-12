@@ -19,6 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224047778984712946}
+  - component: {fileID: 114456987316669482}
   m_Layer: 5
   m_Name: ArrowsHorizontal
   m_TagString: Untagged
@@ -37,7 +38,6 @@ GameObject:
   - component: {fileID: 222434142652787570}
   - component: {fileID: 114720714924287874}
   - component: {fileID: 114740802494836174}
-  - component: {fileID: 114635365383690392}
   m_Layer: 5
   m_Name: Left
   m_TagString: Untagged
@@ -56,7 +56,6 @@ GameObject:
   - component: {fileID: 222401012081011776}
   - component: {fileID: 114791394632903650}
   - component: {fileID: 114430289340910388}
-  - component: {fileID: 114499551090773274}
   m_Layer: 5
   m_Name: Right
   m_TagString: Untagged
@@ -77,36 +76,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_AspectMode: 2
   m_AspectRatio: 1
---- !u!114 &114499551090773274
+--- !u!114 &114456987316669482
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1667236953054612}
+  m_GameObject: {fileID: 1148052602439860}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fda952153dba3064ab80a62889c1583f, type: 3}
+  m_Script: {fileID: 11500000, guid: 1a70dc776bc37f748a08a41f672a58e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 1
-  axis:
+  xAxis:
     m_key: Horizontal
     value: 0
---- !u!114 &114635365383690392
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1269732630660038}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fda952153dba3064ab80a62889c1583f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  value: -1
-  axis:
-    m_key: Horizontal
+  yAxis:
+    m_key: 
     value: 0
+  valueMultiplier: 1
+  deadzoneRadius: 0
 --- !u!114 &114720714924287874
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -120,7 +108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -160,7 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []

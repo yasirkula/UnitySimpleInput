@@ -19,12 +19,14 @@ SimpleInput works almost identically to standard Input system; only the lerping 
 - AxisInputKeyboard: provides axis input while specified key is held down
 - AxisInputMouse: redirects "Mouse X" and "Mouse Y" inputs to two other axes on standalone platforms. Normally, on mobile platforms, dragging your finger on touchscreen provides "Mouse X" and "Mouse Y" inputs. However, you may want to simulate these two axes only with certain input method(s) on mobile platforms, e.g. a joystick. In this case, use this component to redirect mouse input to some other custom axes (like "MouseNew X", "MouseNew Y") and use these axes with SimpleInput in your scripts. Other input method(s) e.g. joystick should also use these axes instead of "Mouse X" and "Mouse Y"
 - AxisInputUI: provides axis input while attached UI Element (anything that extends UnityEngine.UI.Graphic) is held down
-- AxisInputPinchGesture: provides axis input while pinch gesture is performed with two pointers on a RectTransform
-- AxisInputRotateGesture: provides axis input while rotate gesture is performed with two pointers on a RectTransform
+- AxisInputUIArrows: provides 2-directional (left-right or up-down) or 4-directional axis input while attached UI Element is held down (see ArrowsAllDirections, ArrowsHorizontal and ArrowsVertical prefabs). UI Element's RectTransform must have a Pivot value of (0.5, 0.5)
+- AxisInputMoveGesture: provides axis input while move gesture (two pointers moving in the same direction) is performed on a RectTransform
+- AxisInputPinchGesture: provides axis input while pinch gesture (two pointers moving in opposite directions) is performed on a RectTransform
+- AxisInputRotateGesture: provides axis input while rotate gesture (two pointers rotating around a center point) is performed on a RectTransform
 - AxisInputSwipeGesture: provides axis input while a pointer is swiped by a specified amount on a RectTransform
-- Dpad: provides -1, 0 or 1 as axis input for x and y axes while the Dpad is held down; works similar to joystick Dpads
+- Dpad: provides -1, 0 or 1 as axis input for x and y axes while the Dpad is held down; works similar to joystick Dpads. Dpad's RectTransform must have a Pivot value of (0.5, 0.5)
 - Joystick: a standard on-screen joystick input. If "Is Dynamic Joystick" is selected, joystick only appears while a pointer touches the screen. "Dynamic Joystick Movement Area" specifies the zone that the dynamic joystick can appear in (leave blank to use the whole canvas). If "Can Follow Pointer" is selected, joystick will follow the cursor when cursor's distance to the joystick is greater than the radius
-- SteeringWheel: provides axis input while the wheel is rotated (by far, the most fun input method to play with =') )
+- SteeringWheel: provides axis input while the wheel is rotated (by far, the most fun input method to play with =') ). Steering wheel's RectTransform must have a Pivot value of (0.5, 0.5)
 - Touchpad: provides axis input while a pointer is dragged on a RectTransform
 
 2.2. SimpleInput.GetButton Inputs

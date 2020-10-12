@@ -63,11 +63,14 @@ MonoBehaviour:
   yAxis:
     m_key: Vertical
     value: 0
-  thumb: {fileID: 114592483299003616}
   movementAxes: 0
+  valueMultiplier: 1
+  thumb: {fileID: 114592483299003616}
   movementAreaRadius: 75
+  deadzoneRadius: 0
   isDynamicJoystick: 0
   dynamicJoystickMovementArea: {fileID: 0}
+  canFollowPointer: 0
 --- !u!114 &114592483299003616
 MonoBehaviour:
   m_ObjectHideFlags: 1
