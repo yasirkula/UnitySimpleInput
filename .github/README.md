@@ -12,6 +12,8 @@
 
 SimpleInput is an improvement over Unity's standard **Input** system that allows you to use custom input providers like on-screen joysticks, UI buttons and d-pads. In other words, it lets you simulate e.g. Input.GetAxis when a button is pressed or a virtual joystick is dragged. It also supports using custom axes and buttons that don't necessarily exist in Edit-Project Settings-Input.
 
+Please note that Unity's new Input System **is not** supported.
+
 ## INSTALLATION
 
 There are 5 ways to install this plugin:
