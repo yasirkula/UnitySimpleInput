@@ -6,6 +6,8 @@
 
 **Forum Thread:** https://forum.unity.com/threads/simple-input-use-custom-input-providers-like-joysticks-ui-buttons-and-d-pads-open-source.520504/
 
+**Discord:** https://discord.gg/UJJt549AaV
+
 **WebGL Demo:** http://yasirkula.net/SimpleInputDemo/
 
 **[Support the Developer ☕](https://yasirkula.itch.io/unity3d)**
