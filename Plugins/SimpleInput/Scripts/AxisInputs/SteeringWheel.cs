@@ -44,6 +44,10 @@ namespace SimpleInputNamespace
 
 		private void OnDisable()
 		{
+			wheelBeingHeld = false;
+			wheelAngle = wheelPrevAngle = m_value = 0f;
+			wheelTR.localEulerAngles = Vector3.zero;
+
 			axis.StopTracking();
 			SimpleInput.OnUpdate -= OnUpdate;
 		}
