@@ -200,6 +200,30 @@ public class SimpleInput : MonoBehaviour
 		DontDestroyOnLoad( instance.gameObject );
 	}
 
+#if UNITY_2019_3_OR_NEWER
+	[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.SubsystemRegistration )] // Configurable Enter Play Mode: https://docs.unity3d.com/Manual/DomainReloading.html
+	private static void ResetStatics()
+	{
+		instance = null;
+		OnUpdate = null;
+
+		axes.Clear();
+		axesList.Clear();
+		trackedUnityAxes.Clear();
+		trackedTemporaryAxes.Clear();
+		buttons.Clear();
+		buttonsList.Clear();
+		trackedUnityButtons.Clear();
+		trackedTemporaryButtons.Clear();
+		mouseButtons.Clear();
+		mouseButtonsList.Clear();
+		trackedUnityMouseButtons.Clear();
+		trackedTemporaryMouseButtons.Clear();
+		keys.Clear();
+		keysList.Clear();
+	}
+#endif
+
 	private void Awake()
 	{
 		SceneManager.sceneLoaded += OnSceneChanged;
