@@ -9,6 +9,7 @@ namespace SimpleInputNamespace
 		void ResetValue();
 	}
 
+    [System.Serializable]
 	public abstract class BaseInput<K, V> : IBaseInput
 	{
 		[SerializeField]
