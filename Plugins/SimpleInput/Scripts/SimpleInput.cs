@@ -200,7 +200,6 @@ public class SimpleInput : MonoBehaviour
 		DontDestroyOnLoad( instance.gameObject );
 	}
 
-#if UNITY_2019_3_OR_NEWER
 	[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.SubsystemRegistration )] // Configurable Enter Play Mode: https://docs.unity3d.com/Manual/DomainReloading.html
 	private static void ResetStatics()
 	{
@@ -222,7 +221,6 @@ public class SimpleInput : MonoBehaviour
 		keys.Clear();
 		keysList.Clear();
 	}
-#endif
 
 	private void Awake()
 	{

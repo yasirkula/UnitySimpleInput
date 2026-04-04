@@ -4,10 +4,8 @@ namespace SimpleInputNamespace
 {
 	public class KeyInputKeyboard : MonoBehaviour
 	{
-#pragma warning disable 0649
 		[SerializeField]
 		private KeyCode realKey;
-#pragma warning restore 0649
 
 		public SimpleInput.KeyInput key = new SimpleInput.KeyInput();
 

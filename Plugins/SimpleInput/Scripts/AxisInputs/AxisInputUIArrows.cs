@@ -10,12 +10,10 @@ namespace SimpleInputNamespace
 
 		public float valueMultiplier = 1f;
 
-#pragma warning disable 0649
 		[Tooltip( "Radius of the deadzone at the center of the arrows that will yield no input" )]
 		[SerializeField]
 		private float deadzoneRadius;
 		private float deadzoneRadiusSqr;
-#pragma warning restore 0649
 
 		private RectTransform rectTransform;
 

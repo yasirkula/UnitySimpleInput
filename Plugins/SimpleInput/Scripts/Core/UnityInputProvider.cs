@@ -5,7 +5,6 @@ namespace SimpleInputNamespace
 {
 	public class UnityInputProvider : MonoBehaviour
 	{
-#pragma warning disable 0649
 		[SerializeField]
 		private string[] axes;
 
@@ -17,7 +16,6 @@ namespace SimpleInputNamespace
 
 		[SerializeField]
 		private KeyCode[] keys;
-#pragma warning restore 0649
 
 		private SimpleInput.AxisInput[] axisInputs;
 		private SimpleInput.ButtonInput[] buttonInputs;

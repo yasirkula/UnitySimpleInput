@@ -17,7 +17,6 @@ namespace SimpleInputNamespace
 		public MovementAxes movementAxes = MovementAxes.XandY;
 		public float valueMultiplier = 1f;
 
-#pragma warning disable 0649
 		[SerializeField]
 		private Image thumb;
 		private RectTransform thumbTR;
@@ -37,7 +36,6 @@ namespace SimpleInputNamespace
 
 		[SerializeField]
 		private bool canFollowPointer = false;
-#pragma warning restore 0649
 
 		private bool joystickHeld = false;
 		private Vector2 pointerInitialPos;
